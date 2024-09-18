@@ -94,7 +94,7 @@ def get_pdf_images(
             it is probably a PDF
 
     Fetches the images for the given PRO from Liminal Network as a PDF,
-    saving to "<pro>_<which>.pdf" on the local filesystem.
+    saving to "{pro}_{which}.pdf" on the local filesystem.
 
     Returns:
         Error message returned by server on non-2xx response as dictionary
@@ -315,6 +315,15 @@ def limited_use_key(
         pro - pick one of pro, bol, or tracking, and provide your number
         bol - pick one of pro, bol, or tracking, and provide your number
         tracking - pick one of pro, bol, or tracking, and provide your number
+
+    On success, returns:
+
+        "Auth Key As string"
+
+    On failure, returns:
+
+        {"errors": [...]}
+
     """
     if not isinstance(methods, str):
         methods = ",".join(methods)
@@ -501,8 +510,17 @@ def handle_request(
         body_base64_encoded - true if the body was base64 encoded, and must be decoded
         body_json_encoded - true if the body was json encoded, otherwise was x-www-form-urlencoded
 
-    Handles "start", "image", and "end" webhook requests, inserting their results into
+    Handles "start", "status", "image", and "end" webhook requests, inserting their results into
     our demonstration sqlite db.
+
+    On success, returns:
+
+        "ok"
+
+    On failure, returns:
+
+        "error-..."
+
     """
     # decode the post body
     if body_base64_encoded:
@@ -541,7 +559,8 @@ def handle_request(
         return "ok"
 
     if what == "status":
-        return handle_status(conn, post_data, now, ref)
+        handle_status(conn, post_data, now, ref)
+        return "ok"
 
     if what == "image":
         return handle_image(conn, post_data, now, ref)
@@ -613,9 +632,13 @@ def handle_image(conn, post_data: dict, now: str, ref: str) -> str:
     If "ok" is returned, will have processed and inserted the image in the post
     data to the database.
 
-    Returns one of:
+    On success, returns:
+
         "ok"
-        "error-<what was the problem>"
+
+    On failure, returns:
+
+        "error-..."
 
     """
     for it in ("filename", "image"):
@@ -727,17 +750,17 @@ def main():
     group.add_argument(
         "--sign",
         default="",
-        help="call /sign with the comma-separated list of methods to allow: date,status,lading,proof,rating (see also: --count and --duration)"
+        help="call /sign with the comma-separated list of methods to allow: date,status,lading,proof,rating (see also: --count and --duration)",
     )
     group.add_argument(
         "--webhook",
         default="",
-        help="call the /webhook endpoint and register the provided url"
+        help="call the /webhook endpoint and register the provided url",
     )
     group.add_argument(
         "--email",
         default="",
-        help="call the /webhook endpoint and register the provided email address"
+        help="call the /webhook endpoint and register the provided email address",
     )
     parser.add_argument(
         "--sqlite-file",
@@ -758,18 +781,18 @@ def main():
         "--count",
         default=1,
         type=int,
-        help="how many times to allow calls with the api key returned from /sign (1-100 valid)"
+        help="how many times to allow calls with the api key returned from /sign (1-100 valid)",
     )
     parser.add_argument(
         "--duration",
         default=300,
         type=int,
-        help="how long to allow calls with the api key returned from /sign (1 to 2592000 seconds)"
+        help="how long to allow calls with the api key returned from /sign (1 to 2592000 seconds)",
     )
     parser.add_argument(
         "--status",
         default="",
-        help="which statuses to report to the web / email hook, or 'all' to get all updates"
+        help="which statuses to report to the web / email hook, or 'all' to get all updates",
     )
     group2 = parser.add_mutually_exclusive_group(required=True)
     group2.add_argument(
@@ -867,13 +890,15 @@ def main():
             return
 
         elif args.sign:
-            print(limited_use_key(
-                args.scac,
-                sign,
-                args.count,
-                args.duration,
-                args.pro[0] if args.pro else "",
-            ))
+            print(
+                limited_use_key(
+                    args.scac,
+                    sign,
+                    args.count,
+                    args.duration,
+                    args.pro[0] if args.pro else "",
+                )
+            )
             return
 
         elif args.webhook or args.email:
