@@ -1,0 +1,14 @@
+FROM ubuntu:24.04
+
+RUN apt update && apt upgrade -y
+RUN apt-cache search pip
+RUN apt install -y python3.12 python3-pip
+RUN python3.12 -m pip install sphinx sphinx-markdown-builder --break-system-packages
+WORKDIR /app
+ADD doc_client.py .
+RUN sphinx-apidoc -o Sphinx-docs . sphinx-apidoc --full -A 'Liminal Network'
+ADD Sphinx-docs/conf.py Sphinx-docs/
+WORKDIR /app/Sphinx-docs
+RUN make markdown
+# what we want lives in /app/Sphinx-docs/_build/markdown
+
