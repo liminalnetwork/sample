@@ -18,10 +18,9 @@ If you would like to use this library directly, rather than rewriting or
 copying/pasting, you should:
 
 1. import doc_client
-2.
-  a. overwrite attributes on doc_client.settings  
-     OR
-  b. import shared; replace shared.settings with your custom object
+2. One of:
+   1. overwrite attributes on doc_client.settings OR
+   2. import shared; replace shared.settings with your custom object
 3. use one or more of the imported methods in doc_client, or the other relevant doc_*.py modules
 
 """

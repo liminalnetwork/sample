@@ -15,10 +15,9 @@ If you would like to use this library directly, rather than rewriting or
 copying/pasting, you should:
 
 1. import doc_client
-2.
-  a. overwrite attributes on doc_client.[settings](#settings)  
-     OR
-  b. import shared; replace shared.[settings](#settings) with your custom [object](builtins.md#object)
+2. One of:
+   1. overwrite attributes on doc_client.[settings](#settings) OR
+   2. import shared; replace shared.[settings](#settings) with your custom [object](builtins.md#object)
 3. use one or more of the imported methods in doc_client, or the other relevant doc_*.py modules
 
 ## Builtin modules
@@ -76,39 +75,39 @@ Data and other attributes defined here:
 ## Imported functions
 
 [src.doc_ebol](src.doc_ebol.md)
-> [ebol_CU()](src.doc_ebol.md#-ebol_CU)
-> [ebol_delete()](src.doc_ebol.md#-ebol_delete)
-> [ebol_get()](src.doc_ebol.md#-ebol_get)
+> [ebol_CU()](src.doc_ebol.md#-ebol_CU)  
+> [ebol_delete()](src.doc_ebol.md#-ebol_delete)  
+> [ebol_get()](src.doc_ebol.md#-ebol_get)  
 
 [src.doc_pickup](src.doc_pickup.md)
-> [pickup_CU()](src.doc_pickup.md#-pickup_CU)
-> [pickup_delete()](src.doc_pickup.md#-pickup_delete)
-> [pickup_get()](src.doc_pickup.md#-pickup_get)
+> [pickup_CU()](src.doc_pickup.md#-pickup_CU)  
+> [pickup_delete()](src.doc_pickup.md#-pickup_delete)  
+> [pickup_get()](src.doc_pickup.md#-pickup_get)  
 
 [src.doc_presigned](src.doc_presigned.md)
-> [limited_use_key()](src.doc_presigned.md#-limited_use_key)
+> [limited_use_key()](src.doc_presigned.md#-limited_use_key)  
 
 [src.doc_visibility](src.doc_visibility.md)
-> [cancel_hook()](src.doc_visibility.md#-cancel_hook)
-> [get_hook_status()](src.doc_visibility.md#-get_hook_status)
-> [get_individual_images()](src.doc_visibility.md#-get_individual_images)
-> [get_pdf_images()](src.doc_visibility.md#-get_pdf_images)
-> [get_status()](src.doc_visibility.md#-get_status)
-> [register_hook()](src.doc_visibility.md#-register_hook)
+> [cancel_hook()](src.doc_visibility.md#-cancel_hook)  
+> [get_hook_status()](src.doc_visibility.md#-get_hook_status)  
+> [get_individual_images()](src.doc_visibility.md#-get_individual_images)  
+> [get_pdf_images()](src.doc_visibility.md#-get_pdf_images)  
+> [get_status()](src.doc_visibility.md#-get_status)  
+> [register_hook()](src.doc_visibility.md#-register_hook)  
 
 [src.doc_webhook_handler](src.doc_webhook_handler.md)
-> [get_all_to_db()](src.doc_webhook_handler.md#-get_all_to_db)
-> [get_images_to_db()](src.doc_webhook_handler.md#-get_images_to_db)
-> [get_status_to_db()](src.doc_webhook_handler.md#-get_status_to_db)
-> [handle_end()](src.doc_webhook_handler.md#-handle_end)
-> [handle_image()](src.doc_webhook_handler.md#-handle_image)
-> [handle_request()](src.doc_webhook_handler.md#-handle_request)
-> [handle_start()](src.doc_webhook_handler.md#-handle_start)
-> [handle_status()](src.doc_webhook_handler.md#-handle_status)
-> [insert_data()](src.doc_webhook_handler.md#-insert_data)
-> [setup_schema()](src.doc_webhook_handler.md#-setup_schema)
+> [get_all_to_db()](src.doc_webhook_handler.md#-get_all_to_db)  
+> [get_images_to_db()](src.doc_webhook_handler.md#-get_images_to_db)  
+> [get_status_to_db()](src.doc_webhook_handler.md#-get_status_to_db)  
+> [handle_end()](src.doc_webhook_handler.md#-handle_end)  
+> [handle_image()](src.doc_webhook_handler.md#-handle_image)  
+> [handle_request()](src.doc_webhook_handler.md#-handle_request)  
+> [handle_start()](src.doc_webhook_handler.md#-handle_start)  
+> [handle_status()](src.doc_webhook_handler.md#-handle_status)  
+> [insert_data()](src.doc_webhook_handler.md#-insert_data)  
+> [setup_schema()](src.doc_webhook_handler.md#-setup_schema)  
 
 [src.shared](src.shared.md)
-> [get_api_key()](src.shared.md#-get_api_key)
-> [get_schema()](src.shared.md#-get_schema)
+> [get_api_key()](src.shared.md#-get_api_key)  
+> [get_schema()](src.shared.md#-get_schema)  
 > [supported()](src.shared.md#-supported)

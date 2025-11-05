@@ -149,7 +149,7 @@ Note: syntax is valid SQLite3, unknown compatibility with other databases.
 ## Imported functions
 
 [src.doc_visibility](src.doc_visibility.md)
-> [get_individual_images()](src.doc_visibility.md#-get_individual_images)
+> [get_individual_images()](src.doc_visibility.md#-get_individual_images)  
 > [get_status()](src.doc_visibility.md#-get_status)
 
 ## Data

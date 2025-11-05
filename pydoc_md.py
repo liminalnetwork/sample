@@ -462,7 +462,7 @@ class MarkdownDoc(Doc):
             for src, functions in sorted(imported_funcs.items()):
                 ifc.append(self.filelink(src + ".md", src))
                 for fcn in sorted(functions):
-                    ifc.append("> " + fcn)
+                    ifc.append("> " + fcn + "  ")
                 ifc.append("")
 
             if ifc:

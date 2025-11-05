@@ -146,8 +146,8 @@ Liminal Network will return the raw Carrier result, without modifications.
 ## Imported functions
 
 [src.shared](src.shared.md)
-> [get_api_key()](src.shared.md#-get_api_key)
-> [get_schema()](src.shared.md#-get_schema)
+> [get_api_key()](src.shared.md#-get_api_key)  
+> [get_schema()](src.shared.md#-get_schema)  
 > [supported()](src.shared.md#-supported)
 
 ## Data
