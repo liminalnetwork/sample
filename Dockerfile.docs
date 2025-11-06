@@ -5,5 +5,3 @@ ADD src/*.py .
 
 WORKDIR /app/
 ADD pydoc_md.py .
-
-RUN ls src/*.py | sed s/[.]py$//g | sed s/[/]/./g | xargs -n1 python3 pydoc_md.py

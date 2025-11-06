@@ -1,6 +1,6 @@
 # module src.doc_presigned
 
-## [src.md](src).doc_presigned [/app/src/doc_presigned.py](/app/src/doc_presigned.py)
+## src.doc_presigned [/app/src/doc_presigned.py](/app/src/doc_presigned.py)
 
 This module defines one function:
 
@@ -14,17 +14,22 @@ creating transactional email links:
     key = [limited_use_key](#-limited_use_key)(
         scac,
         ["status", "proof", "lading", "image"],
-        count=10, # caller can use this api key 10 times
-        duration=7*86400 # the api key will last up to 1 week,
+        count=10, \# caller can use this api key 10 times
+        duration=7\*86400 \# the api key will last up to 1 week,
         pro=...
     )
 
     if isinstance(key, str):
-        # this link can be used in a transactional email, allowing for users
-        # to fetch the image without knowing your API key
-        url = f"[https://api.liminalnetwork.com/{scac}/proof?api_key={key](https://api.liminalnetwork.com/{scac}/proof?api_key={key)}"
+        \# this link can be used in a transactional email, allowing for users
+        \# to fetch the image without knowing your API key
+        url = f"[https://api.liminalnetwork.com/{scac}/proof?api\_key={key](https://api.liminalnetwork.com/{scac}/proof?api\_key={key)}"
     else:
         raise Exception(key["errors])
+
+## Builtin modules
+
+[json](https://docs.python.org/3/library/json.html)  
+[urllib](https://docs.python.org/3/library/urllib.html)
 
 ## Functions defined here
 
@@ -53,9 +58,9 @@ On failure, returns:
 
 ## Imported functions
 
-[src.shared](src.shared.md)
-> [get_api_key()](src.shared.md#-get_api_key)
+From **[src.shared](src.shared.md)** [src/shared.py](src/shared.py)
+* [get_api_key()](src.shared.md#-get_api_key)
 
 ## Data
 
-*url* = 'https://api.liminalnetwork.com/{scac}/{method}?auth={api_key}&pro={pro}'
+url = 'https://api.liminalnetwork.com/{scac}/{method}?auth={api_key}&pro={pro}'

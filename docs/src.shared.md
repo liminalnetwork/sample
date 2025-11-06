@@ -1,29 +1,35 @@
 # module src.shared
 
-## [src.md](src).shared [/app/src/shared.py](/app/src/shared.py)
+## src.shared [/app/src/shared.py](/app/src/shared.py)
 
 This module includes functions shared by other portions of this client
 implementation.
 
-## Classes
+## Builtin modules
 
-* [builtins.object](builtins.md#object)
-  * [settings](src.shared.md#settings) ([builtins.object](builtins.md#object))
+[json](https://docs.python.org/3/library/json.html)  
+[urllib](https://docs.python.org/3/library/urllib.html)
 
-class <a name="settings">*settings*</a>(builtins.object)
+## Classes defined here
 
-overridden by doc_client when doc_client imports this module
+* [settings](src.shared.md#settings)
+
+### class <a name="settings">settings</a>(builtins.object)
+
+overridden by `doc_client` when `doc_client` imports this module
+
+---
 
 Data descriptors defined here:
 
-    *__dict__*
+    __dict__
         dictionary for instance variables
-    *__weakref__*
+    __weakref__
         list of weak references to the object
 
 ## Functions defined here
 
-### <a name="-get_api_key">get_api_key</a>(scac_or_carrier_id: str) -&gt; str
+### <a name="-get_api_key">get_api_key</a>(scac\_or\_carrier\_id: str) -&gt; str
 
 Args:
 
@@ -82,12 +88,12 @@ Returns a list of methods supported by the API, like:
 
 ## Data
 
-*ebol_url* = 'https://api.liminalnetwork.com/{scac}/ebol_21'
+ebol_url = 'https://api.liminalnetwork.com/{scac}/ebol_21'
 
-*pickup_url* = 'https://api.liminalnetwork.com/{scac}/pickup'
+pickup_url = 'https://api.liminalnetwork.com/{scac}/pickup'
 
-*schema_url* = 'https://api.liminalnetwork.com/schema?name='
+schema_url = 'https://api.liminalnetwork.com/schema?name='
 
-*supported_url* = 'https://api.liminalnetwork.com/supported?'
+supported_url = 'https://api.liminalnetwork.com/supported?'
 
-*url* = 'https://api.liminalnetwork.com/{scac}/{method}?auth={api_key}&pro={pro}'
+url = 'https://api.liminalnetwork.com/{scac}/{method}?auth={api_key}&pro={pro}'

@@ -1,13 +1,20 @@
 # module src.doc_webhook_handler
 
-## [src.md](src).doc_webhook_handler [/app/src/doc_webhook_handler.py](/app/src/doc_webhook_handler.py)
+## src.doc_webhook_handler [/app/src/doc_webhook_handler.py](/app/src/doc_webhook_handler.py)
 
-# Copyright 2025 Liminal Network
-# See LICENSE for details
+\# Copyright 2025 Liminal Network
+\# See LICENSE for details
+
+## Builtin modules
+
+[base64](https://docs.python.org/3/library/base64.html)  
+[datetime](https://docs.python.org/3/library/datetime.html)  
+[os](https://docs.python.org/3/library/os.html)  
+[urllib](https://docs.python.org/3/library/urllib.html)
 
 ## Functions defined here
 
-### <a name="-get_all_to_db">get_all_to_db</a>(conn, pro: str, scac_or_carrier_id: Union[str, int] = 'LN')
+### <a name="-get_all_to_db">get_all_to_db</a>(conn, pro: str, scac\_or\_carrier\_id: Union[str, int] = 'LN')
 
 Args:
     conn - sqlite3 connection object
@@ -19,7 +26,7 @@ Args:
 Will call [get_status_to_db](#-get_status_to_db)(), and if the status is one to expect images,
 will subsequently call [get_images_to_db](#-get_images_to_db)().
 
-### <a name="-get_images_to_db">get_images_to_db</a>(conn, pro: str, scac_or_carrier_id: Union[str, int] = 'LN')
+### <a name="-get_images_to_db">get_images_to_db</a>(conn, pro: str, scac\_or\_carrier\_id: Union[str, int] = 'LN')
 
 Args:
     conn - sqlite3 connection object
@@ -31,7 +38,7 @@ Args:
 Inserts all images for the given pro into the database specified,
 into the table named shipment_images.
 
-### <a name="-get_status_to_db">get_status_to_db</a>(conn, pro: str, scac_or_carrier_id: Union[str, int] = 'LN') -&gt; dict
+### <a name="-get_status_to_db">get_status_to_db</a>(conn, pro: str, scac\_or\_carrier\_id: Union[str, int] = 'LN') -&gt; dict
 
 Args:
     conn - sqlite3 connection object
@@ -46,7 +53,7 @@ into the table named known_shipments. On error will not change the DB.
 Returns:
     get_status() call results for testing / verification
 
-### <a name="-handle_end">handle_end</a>(conn, post_data: dict, now: str, ref: str) -&gt; str
+### <a name="-handle_end">handle_end</a>(conn, post\_data: dict, now: str, ref: str) -&gt; str
 
 Args:
 
@@ -63,7 +70,7 @@ Returns one of:
     "ok"
     "error-&lt;what was the problem&gt;"
 
-### <a name="-handle_image">handle_image</a>(conn, post_data: dict, now: str, ref: str) -&gt; str
+### <a name="-handle_image">handle_image</a>(conn, post\_data: dict, now: str, ref: str) -&gt; str
 
 Args:
 
@@ -83,7 +90,7 @@ On failure, returns:
 
     "error-..."
 
-### <a name="-handle_request">handle_request</a>(<br />    conn,<br />    request_body: Union[str, bytes],<br />    body_base64_encoded: bool,<br />    body_json_encoded: bool<br />) -&gt; str
+### <a name="-handle_request">handle_request</a>(<br />    conn,<br />    request\_body: Union[str, bytes],<br />    body\_base64\_encoded: bool,<br />    body\_json\_encoded: bool<br />) -&gt; str
 
 Args:
 
@@ -114,7 +121,7 @@ Args:
 Ensures that ref is represented in known_shipments. If not,
 will add the row with status of QR_SCANNED.
 
-### <a name="-handle_status">handle_status</a>(conn, post_data: dict, now: str, ref: str)
+### <a name="-handle_status">handle_status</a>(conn, post\_data: dict, now: str, ref: str)
 
 Args:
 
@@ -148,10 +155,10 @@ Note: syntax is valid SQLite3, unknown compatibility with other databases.
 
 ## Imported functions
 
-[src.doc_visibility](src.doc_visibility.md)
-> [get_individual_images()](src.doc_visibility.md#-get_individual_images)  
-> [get_status()](src.doc_visibility.md#-get_status)
+From **[src.doc_visibility](src.doc_visibility.md)** [src/doc_visibility.py](src/doc_visibility.py)
+* [get_individual_images()](src.doc_visibility.md#-get_individual_images)
+* [get_status()](src.doc_visibility.md#-get_status)
 
 ## Data
 
-*__docs__* = '\nThis module defines functions for most of a sam... handle_end() - processes "end delivery" webhook\n'
+__docs__ = '\nThis module defines functions for most of a sam... handle_end() - processes "end delivery" webhook\n'

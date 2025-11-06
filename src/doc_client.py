@@ -6,6 +6,7 @@
 __doc__ = """
 
 Names available in this module are imported from:
+
     shared
     doc_visibility
     doc_presigned
@@ -17,11 +18,11 @@ Names available in this module are imported from:
 If you would like to use this library directly, rather than rewriting or
 copying/pasting, you should:
 
-1. import doc_client
-2. One of:
+1. `import doc_client`
+2. Pick ONE of:
    1. overwrite attributes on doc_client.settings OR
-   2. import shared; replace shared.settings with your custom object
-3. use one or more of the imported methods in doc_client, or the other relevant doc_*.py modules
+   2. after `import doc_client`, `import shared` and replace `shared.settings` with your custom object
+3. use one or more of the imported methods in `doc_client`, or the other relevant `doc_*.py` modules
 
 """
 
@@ -38,6 +39,7 @@ class settings:
     This basic settings object overwrites shared.settings when you import this
     module. This settings object has a default config that will allow you to
     make requests against our sandbox API for the functions:
+
         get_status()
         get_pdf_images()
         get_individual_images()
@@ -50,7 +52,7 @@ class settings:
     `LIMINAL_NETWORK_API_KEY` and `LIMINAL_NETWORK_FINAL_MILE_API_KEY` as
     necessary. For different API keys per scac or carrier id, you would
     want to add attributes to this object, then add the scac or carrier id
-    to the CARRIER_TO_CONFIG mapping.
+    to the `CARRIER_TO_CONFIG` mapping.
 
     """
     # Keep the known sandbox key for the warning message in the command line
@@ -99,6 +101,11 @@ from .doc_pickup import pickup_CU, pickup_get, pickup_delete
 
 
 def main():
+    """
+    This main() function provides a command-line interface to the
+    visibility API. Try running via "python3 -m src.doc_client --help"
+    for usage information.
+    """
     import argparse
     import tempfile
 
@@ -126,7 +133,7 @@ def main():
         "--files",
         default=False,
         action="store_true",
-        help="Provide to store in individual .jpg and .json files, see --dirname for name",
+        help="Provide to store in individual .jpg and .json files, see --dirname for alternate destination directories",
     )
     group.add_argument(
         "--sign",

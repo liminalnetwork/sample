@@ -20,7 +20,7 @@ schema_url = "https://api.liminalnetwork.com/schema?name="
 
 
 class settings:
-    "overridden by doc_client when doc_client imports this module"
+    """overridden by `doc_client` when `doc_client` imports this module"""
 
 
 def get_api_key(scac_or_carrier_id: str) -> str:

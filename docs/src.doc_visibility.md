@@ -1,6 +1,6 @@
 # module src.doc_visibility
 
-## [src.md](src).doc_visibility [/app/src/doc_visibility.py](/app/src/doc_visibility.py)
+## src.doc_visibility [/app/src/doc_visibility.py](/app/src/doc_visibility.py)
 
 This module defines functions for Liminal Network's Visibility API package:
 
@@ -17,9 +17,14 @@ directly return information about a given shipment, while `[register_hook](#-reg
 for automatically reporting status information upstream to your provided webhook
 or email address.
 
+## Builtin modules
+
+[json](https://docs.python.org/3/library/json.html)  
+[urllib](https://docs.python.org/3/library/urllib.html)
+
 ## Functions defined here
 
-### <a name="-cancel_hook">cancel_hook</a>(webhook_id: str) -&gt; dict
+### <a name="-cancel_hook">cancel_hook</a>(webhook\_id: str) -&gt; dict
 
 Args:
 
@@ -30,7 +35,7 @@ Returns:
     confirmation that your webhook was deleted, or an error indicating that the
     webhook is invalid (was already deleted, or it never existed)
 
-### <a name="-get_hook_status">get_hook_status</a>(webhook_id: str) -&gt; dict
+### <a name="-get_hook_status">get_hook_status</a>(webhook\_id: str) -&gt; dict
 
 Args:
 
@@ -40,7 +45,7 @@ Returns:
 
     dictionary containing your status, or an error indicating that the webhook is invalid
 
-### <a name="-get_individual_images">get_individual_images</a>(<br />    pro: str,<br />    which: str,<br />    indexes: tuple = (),<br />    scac_or_carrier_id: Union[str, int] = 'LN',<br />    test_output: bool = False<br />)
+### <a name="-get_individual_images">get_individual_images</a>(<br />    pro: str,<br />    which: str,<br />    indexes: tuple = (),<br />    scac\_or\_carrier\_id: Union[str, int] = 'LN',<br />    test\_output: bool = False<br />)
 
 Args:
 
@@ -65,7 +70,7 @@ Returns:
 
     List of image filenames stored on the local disk.
 
-### <a name="-get_pdf_images">get_pdf_images</a>(<br />    pro: str,<br />    which: str,<br />    scac_or_carrier_id: Union[str, int] = 'LN',<br />    test_output: bool = False<br />)
+### <a name="-get_pdf_images">get_pdf_images</a>(<br />    pro: str,<br />    which: str,<br />    scac\_or\_carrier\_id: Union[str, int] = 'LN',<br />    test\_output: bool = False<br />)
 
 Args:
 
@@ -85,7 +90,7 @@ Returns:
     Error message returned by server on non-2xx response as dictionary
     Filename of pdf stored for 2xx responses as string
 
-### <a name="-get_status">get_status</a>(pro: str, scac_or_carrier_id: Union[str, int] = 'LN') -&gt; dict
+### <a name="-get_status">get_status</a>(pro: str, scac\_or\_carrier\_id: Union[str, int] = 'LN') -&gt; dict
 
 Args:
 
@@ -109,7 +114,7 @@ Returns one of:
             'pro': '...'
         }
 
-### <a name="-register_hook">register_hook</a>(<br />    scac: str,<br />    url_or_email: str,<br />    status: str,<br />    pro: str = '',<br />    bol: str = '',<br />    tracking: str = ''<br />) -&gt; Union[str, dict]
+### <a name="-register_hook">register_hook</a>(<br />    scac: str,<br />    url\_or\_email: str,<br />    status: str,<br />    pro: str = '',<br />    bol: str = '',<br />    tracking: str = ''<br />) -&gt; Union[str, dict]
 
 Args:
 
@@ -133,4 +138,4 @@ On failure, returns:
 
 ## Data
 
-*url* = 'https://api.liminalnetwork.com/{scac}/{method}?auth={api_key}&pro={pro}'
+url = 'https://api.liminalnetwork.com/{scac}/{method}?auth={api_key}&pro={pro}'
