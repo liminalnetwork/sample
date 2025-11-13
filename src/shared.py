@@ -49,7 +49,7 @@ def get_schema(name: str = "list") -> Union[tuple, list]:
     """
     Args:
 
-        name - <scac>.<api>.<http method>
+        name - {scac}.{api}.{http method}
 
     Returns:
 

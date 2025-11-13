@@ -1,25 +1,26 @@
 # module src.doc_visibility
 
-## src.doc_visibility [/app/src/doc_visibility.py](/app/src/doc_visibility.py)
+## src.doc_visibility [src/doc_visibility.py](src/doc_visibility.py)
 
 This module defines functions for Liminal Network's Visibility API package:
 
-    [get_status](#-get_status)()
-    [get_pdf_images](#-get_pdf_images)()
-    [get_individual_images](#-get_individual_images)()
-    [register_hook](#-register_hook)()
-    [get_hook_status](#-get_hook_status)()
-    [cancel_hook](#-cancel_hook)()
+[get_status](#-get_status)()
+[get_pdf_images](#-get_pdf_images)()
+[get_individual_images](#-get_individual_images)()
+[register_hook](#-register_hook)()
+[get_hook_status](#-get_hook_status)()
+[cancel_hook](#-cancel_hook)()
 
-The functions `[get_status](#-get_status)()`, `[get_pdf_images](#-get_pdf_images)()`, and `[get_individual_images](#-get_individual_images)()`
-directly return information about a given shipment, while `[register_hook](#-register_hook)()`,
-`[get_hook_status](#-get_hook_status)()`, and `[cancel_hook](#-cancel_hook)()` provide access to our webhook interface
+The functions [get_status](#-get_status)(), [get_pdf_images](#-get_pdf_images)(), and [get_individual_images](#-get_individual_images)()
+directly return information about a given shipment, while [register_hook](#-register_hook)(),
+[get_hook_status](#-get_hook_status)(), and [cancel_hook](#-cancel_hook)() provide access to our webhook interface
 for automatically reporting status information upstream to your provided webhook
 or email address.
 
 ## Builtin modules
 
 [json](https://docs.python.org/3/library/json.html)  
+[os](https://docs.python.org/3/library/os.html)  
 [urllib](https://docs.python.org/3/library/urllib.html)
 
 ## Functions defined here
@@ -28,24 +29,40 @@ or email address.
 
 Args:
 
-    webhook_id - a webhook_id returned by [register_hook](#-register_hook)() that is still valid
+    webhook_id - a webhook_id returned by register_hook() that is still valid
 
 Returns:
 
     confirmation that your webhook was deleted, or an error indicating that the
     webhook is invalid (was already deleted, or it never existed)
 
+Example:
+
+    # if the contents of src/doc_\*.py and src/shared.py are in your path as "ln":
+
+    from ln.doc_client import cancel_hook, settings
+    settings.LIMINAL_NETWORK_API_KEY = ...
+    hook_status = cancel_hook(hook_id)
+
 ### <a name="-get_hook_status">get_hook_status</a>(webhook\_id: str) -&gt; dict
 
 Args:
 
-    webhook_id - a webhook_id returned by [register_hook](#-register_hook)() that is still valid
+    webhook_id - a webhook_id returned by register_hook() that is still valid
 
 Returns:
 
     dictionary containing your status, or an error indicating that the webhook is invalid
 
-### <a name="-get_individual_images">get_individual_images</a>(<br />    pro: str,<br />    which: str,<br />    indexes: tuple = (),<br />    scac\_or\_carrier\_id: Union[str, int] = 'LN',<br />    test\_output: bool = False<br />)
+Example:
+
+    # if the contents of src/doc_\*.py and src/shared.py are in your path as "ln":
+
+    from ln.doc_client import get_hook_status, settings
+    settings.LIMINAL_NETWORK_API_KEY = ...
+    hook_status = get_hook_status(hook_id)
+
+### <a name="-get_individual_images">get_individual_images</a>(<br />    pro: str,<br />    which: str,<br />    indexes: tuple = (),<br />    scac\_or\_carrier\_id: Union[str, int] = 'LN',<br />    test\_output: bool = False,<br />    output\_path: str = ''<br />)
 
 Args:
 
@@ -61,16 +78,25 @@ Args:
         defaults to "LN" for Liminal Network Final Mile Photos service
     test_output - if true, check the content of the each output file to
         verify that it is probably a jpeg image
+    output_path - where to write files, defaults to current path
 
 Fetches the images for the given PRO from Liminal Network as jpegs,
-saving to "&lt;pro&gt;_&lt;which&gt;_&lt;number&gt;.jpg" on the local filesystem for any
+saving to "<pro&gt;_&lt;which&gt;_&lt;number&gt;.jpg" on the local filesystem for any
 images fetched.
 
 Returns:
 
     List of image filenames stored on the local disk.
 
-### <a name="-get_pdf_images">get_pdf_images</a>(<br />    pro: str,<br />    which: str,<br />    scac\_or\_carrier\_id: Union[str, int] = 'LN',<br />    test\_output: bool = False<br />)
+Example:
+
+    # if the contents of src/doc_\*.py and src/shared.py are in your path as "ln":
+
+    from ln.doc_client import get_individual_images, settings
+    settings.LIMINAL_NETWORK_API_KEY = ...
+    image_filenames = get_individual_images(pro, "proof", (), scac)
+
+### <a name="-get_pdf_images">get_pdf_images</a>(<br />    pro: str,<br />    which: str,<br />    scac\_or\_carrier\_id: Union[str, int] = 'LN',<br />    test\_output: bool = False,<br />    output\_path: str = ''<br />)
 
 Args:
 
@@ -81,6 +107,7 @@ Args:
         defaults to "LN" for Liminal Network Final Mile Photos service
     test_output - if true, check the content of the output to verify that
         it is probably a PDF
+    output_path - where to write files, defaults to current path
 
 Fetches the images for the given PRO from Liminal Network as a PDF,
 saving to "{pro}_{which}.pdf" on the local filesystem.
@@ -89,6 +116,14 @@ Returns:
 
     Error message returned by server on non-2xx response as dictionary
     Filename of pdf stored for 2xx responses as string
+
+Example:
+
+    # if the contents of src/doc_\*.py and src/shared.py are in your path as "ln":
+
+    from ln.doc_client import get_status, settings
+    settings.LIMINAL_NETWORK_API_KEY = ...
+    image_filename = get_pdf_images(pro, "proof", scac)
 
 ### <a name="-get_status">get_status</a>(pro: str, scac\_or\_carrier\_id: Union[str, int] = 'LN') -&gt; dict
 
@@ -114,6 +149,14 @@ Returns one of:
             'pro': '...'
         }
 
+Example:
+
+    # if the contents of src/doc_\*.py and src/shared.py are in your path as "ln":
+
+    from ln.doc_client import get_status, settings
+    settings.LIMINAL_NETWORK_API_KEY = ...
+    status = get_status(pro, scac)
+
 ### <a name="-register_hook">register_hook</a>(<br />    scac: str,<br />    url\_or\_email: str,<br />    status: str,<br />    pro: str = '',<br />    bol: str = '',<br />    tracking: str = ''<br />) -&gt; Union[str, dict]
 
 Args:
@@ -135,6 +178,14 @@ On success, returns:
 On failure, returns:
 
     {"errors": [...]}
+
+Example:
+
+    # if the contents of src/doc_\*.py and src/shared.py are in your path as "ln":
+
+    from ln.doc_client import register_hook, settings
+    settings.LIMINAL_NETWORK_API_KEY = ...
+    hook_id = register_hook(scac, url_or_email, "image", pro)
 
 ## Data
 

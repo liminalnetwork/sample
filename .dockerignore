@@ -2,3 +2,4 @@ docs/*
 .git
 Makefile
 __pycache__/*
+*.build

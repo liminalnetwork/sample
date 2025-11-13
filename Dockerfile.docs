@@ -1,7 +1,4 @@
 FROM python:3.14
 
-WORKDIR /app/src/
-ADD src/*.py .
-
 WORKDIR /app/
 ADD pydoc_md.py .

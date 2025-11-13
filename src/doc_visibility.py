@@ -2,6 +2,7 @@
 # See LICENSE for details
 
 import json
+import os
 from typing import Union
 import urllib.request
 
@@ -10,16 +11,16 @@ from .shared import url
 __doc__ = """
 This module defines functions for Liminal Network's Visibility API package:
 
-    get_status()
-    get_pdf_images()
-    get_individual_images()
-    register_hook()
-    get_hook_status()
-    cancel_hook()
+get_status()
+get_pdf_images()
+get_individual_images()
+register_hook()
+get_hook_status()
+cancel_hook()
 
-The functions `get_status()`, `get_pdf_images()`, and `get_individual_images()`
-directly return information about a given shipment, while `register_hook()`,
-`get_hook_status()`, and `cancel_hook()` provide access to our webhook interface
+The functions get_status(), get_pdf_images(), and get_individual_images()
+directly return information about a given shipment, while register_hook(),
+get_hook_status(), and cancel_hook() provide access to our webhook interface
 for automatically reporting status information upstream to your provided webhook
 or email address.
 """
@@ -51,6 +52,15 @@ def get_status(pro: str, scac_or_carrier_id: Union[str, int] = "LN") -> dict:
                 'scac': '...',
                 'pro': '...'
             }
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import get_status, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+        status = get_status(pro, scac)
+
     """
     full_url = url.format(
         method="status",
@@ -66,6 +76,7 @@ def get_pdf_images(
     which: str,
     scac_or_carrier_id: Union[str, int] = "LN",
     test_output: bool = False,
+    output_path: str = "",
 ):
     """
     Args:
@@ -77,6 +88,7 @@ def get_pdf_images(
             defaults to "LN" for Liminal Network Final Mile Photos service
         test_output - if true, check the content of the output to verify that
             it is probably a PDF
+        output_path - where to write files, defaults to current path
 
     Fetches the images for the given PRO from Liminal Network as a PDF,
     saving to "{pro}_{which}.pdf" on the local filesystem.
@@ -85,6 +97,15 @@ def get_pdf_images(
 
         Error message returned by server on non-2xx response as dictionary
         Filename of pdf stored for 2xx responses as string
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import get_status, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+        image_filename = get_pdf_images(pro, "proof", scac)
+
     """
     full_url = (
         url.format(
@@ -110,11 +131,12 @@ def get_pdf_images(
         )
         assert b"PDF" in rr[:4], "File does not seem to be a pdf"
 
-    # should be <pro>.pdf
-    with open(filename, "wb") as out:
+    # should be <output_path>/<pro>.pdf
+    fullpath = os.path.join(output_path, filename)
+    with open(fullpath, "wb") as out:
         out.write(rr)
 
-    return filename
+    return fullpath
 
 
 def get_individual_images(
@@ -123,6 +145,7 @@ def get_individual_images(
     indexes: tuple = (),
     scac_or_carrier_id: Union[str, int] = "LN",
     test_output: bool = False,
+    output_path: str = "",
 ):
     """
     Args:
@@ -139,6 +162,7 @@ def get_individual_images(
             defaults to "LN" for Liminal Network Final Mile Photos service
         test_output - if true, check the content of the each output file to
             verify that it is probably a jpeg image
+        output_path - where to write files, defaults to current path
 
     Fetches the images for the given PRO from Liminal Network as jpegs,
     saving to "<pro>_<which>_<number>.jpg" on the local filesystem for any
@@ -147,9 +171,18 @@ def get_individual_images(
     Returns:
 
         List of image filenames stored on the local disk.
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import get_individual_images, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+        image_filenames = get_individual_images(pro, "proof", (), scac)
+
     """
     if not indexes:
-        # up to 5 normal images, 5 issue images
+        # up to 5 normal images, 5 issue images, skip header image 0
         indexes = tuple(range(1, 11))
 
     partial_url = (
@@ -182,12 +215,13 @@ def get_individual_images(
 
         print("got a file from the api", filename, i)
 
-        # image=0 will be <pro>.png
+        # image=0 will be <pro>.png , a header image listing the PRO
         # image=1+ will be <pro>_<image_type>.jpg
-        with open(filename, "wb") as out:
+        fullname = os.path.join(output_path, filename)
+        with open(fullname, "wb") as out:
             out.write(rr)
 
-        written.append(filename)
+        written.append(fullname)
 
     return written
 
@@ -223,6 +257,14 @@ def register_hook(
     On failure, returns:
 
         {"errors": [...]}
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import register_hook, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+        hook_id = register_hook(scac, url_or_email, "image", pro)
 
     """
     assert pro or bol or tracking
@@ -264,6 +306,15 @@ def get_hook_status(webhook_id: str) -> dict:
     Returns:
 
         dictionary containing your status, or an error indicating that the webhook is invalid
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import get_hook_status, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+        hook_status = get_hook_status(hook_id)
+
     """
     return json.loads(
         urllib.request.urlopen(f"https://api.liminalnetwork.com/{webhook_id}")
@@ -282,6 +333,15 @@ def cancel_hook(webhook_id: str) -> dict:
 
         confirmation that your webhook was deleted, or an error indicating that the
         webhook is invalid (was already deleted, or it never existed)
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import cancel_hook, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+        hook_status = cancel_hook(hook_id)
+
     """
     return json.loads(
         urllib.request.urlopen(

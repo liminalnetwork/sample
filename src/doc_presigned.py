@@ -30,7 +30,7 @@ creating transactional email links:
     if isinstance(key, str):
         # this link can be used in a transactional email, allowing for users
         # to fetch the image without knowing your API key
-        url = f"https://api.liminalnetwork.com/{scac}/proof?api_key={key}"
+        url = f"https://api.liminalnetwork.com/{scac}/proof?auth={key}"
     else:
         raise Exception(key["errors])
 
@@ -67,6 +67,21 @@ def limited_use_key(
     On failure, returns:
 
         {"errors": [...]}
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import get_status, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+
+        # when you receive a proof of delivery image via webhook or otherwise,
+        # you can generate a key so that you can send an email with an image link
+        # to the user, and / or display the image directly on your webpage in an
+        # iframe or img tag, without worrying about leaking your real API key
+
+        key = limited_use_key(scac, "proof", 10, 7*86400, pro=pro)
+        url = f"https://api.liminalnetwork.com/{scac}/proof?auth={key}"
 
     """
     if not isinstance(methods, str):

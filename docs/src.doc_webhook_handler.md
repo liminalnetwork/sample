@@ -1,6 +1,6 @@
 # module src.doc_webhook_handler
 
-## src.doc_webhook_handler [/app/src/doc_webhook_handler.py](/app/src/doc_webhook_handler.py)
+## src.doc_webhook_handler [src/doc_webhook_handler.py](src/doc_webhook_handler.py)
 
 \# Copyright 2025 Liminal Network
 \# See LICENSE for details

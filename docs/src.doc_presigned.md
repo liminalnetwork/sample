@@ -1,28 +1,28 @@
 # module src.doc_presigned
 
-## src.doc_presigned [/app/src/doc_presigned.py](/app/src/doc_presigned.py)
+## src.doc_presigned [src/doc_presigned.py](src/doc_presigned.py)
 
 This module defines one function:
 
-    [limited_use_key](#-limited_use_key)()
+    limited_use_key()
 
 This allows you to "sign" a request, returning a "temporary" API key, which
 can then be used to fetch information about a given shipment without needing
 your API key. This is primarily used for embedding images in web pages, and
 creating transactional email links:
 
-    key = [limited_use_key](#-limited_use_key)(
+    key = limited_use_key(
         scac,
         ["status", "proof", "lading", "image"],
         count=10, \# caller can use this api key 10 times
-        duration=7\*86400 \# the api key will last up to 1 week,
+        duration=7\*86400 # the api key will last up to 1 week,
         pro=...
     )
 
     if isinstance(key, str):
-        \# this link can be used in a transactional email, allowing for users
-        \# to fetch the image without knowing your API key
-        url = f"[https://api.liminalnetwork.com/{scac}/proof?api\_key={key](https://api.liminalnetwork.com/{scac}/proof?api\_key={key)}"
+        # this link can be used in a transactional email, allowing for users
+        # to fetch the image without knowing your API key
+        url = f"https://api.liminalnetwork.com/{scac}/proof?auth={key}"
     else:
         raise Exception(key["errors])
 
@@ -55,6 +55,21 @@ On success, returns:
 On failure, returns:
 
     {"errors": [...]}
+
+Example:
+
+    # if the contents of src/doc_\*.py and src/shared.py are in your path as "ln":
+
+    from ln.doc_client import get_status, settings
+    settings.LIMINAL_NETWORK_API_KEY = ...
+
+    # when you receive a proof of delivery image via webhook or otherwise,
+    # you can generate a key so that you can send an email with an image link
+    # to the user, and / or display the image directly on your webpage in an
+    # iframe or img tag, without worrying about leaking your real API key
+
+    key = limited_use_key(scac, "proof", 10, 7\*86400, pro=pro)
+    url = f"https://api.liminalnetwork.com/{scac}/proof?auth={key}"
 
 ## Imported functions
 

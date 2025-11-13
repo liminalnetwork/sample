@@ -1,6 +1,6 @@
 # module src.doc_client
 
-## src.doc_client [/app/src/doc_client.py](/app/src/doc_client.py)
+## src.doc_client [src/doc_client.py](src/doc_client.py)
 
 Names available in this module are imported from:
 
@@ -18,7 +18,7 @@ copying/pasting, you should:
 1. `import doc_client`
 2. Pick ONE of:
    1. overwrite attributes on doc_client.[settings](#settings) OR
-   2. after `import doc_client`, `import shared` and replace `shared.[settings](#settings)` with your custom [object](builtins.md#object)
+   2. after `import doc_client`, `import shared` and replace shared.[settings](#settings) with your custom [object](builtins.md#object)
 3. use one or more of the imported methods in `doc_client`, or the other relevant `doc_\*.py` modules
 
 ## Imported modules
@@ -79,7 +79,50 @@ Data and other attributes defined here:
 
 This [main](#-main)() function provides a command-line interface to the
 visibility API. Try running via "python3 -m src.doc_client --help"
-for usage information.
+for live usage information.
+
+    usage: python3 -m src.doc_client [-h] [--verbose] [--creds CREDS]
+                                    (--database | --files | --sign SIGN |
+                                    --webhook WEBHOOK | --email EMAIL)
+                                    [--sqlite-file SQLITE_FILE]
+                                    [--dirname DIRNAME] [--scac SCAC]
+                                    [--count COUNT] [--duration DURATION]
+                                    [--status STATUS] [--dispatch DISPATCH]
+                                    [pro ...]
+
+    positional arguments:
+    pro                   The tracking number, pro, or reference number for your
+                            shipment (ignored when --sign=rating)
+
+    options:
+    -h, --help            show this help message and exit
+    --verbose             Provide to receive additional output
+    --creds CREDS         The 'package.module.attribute' to use for your API Key
+    --database            Provide to store in a local sqlite db, see --sqlite-
+                            file for name
+    --files               Provide to store in individual .jpg and .json files,
+                            see --dirname for alternate destination directories
+    --sign SIGN           call /sign with the comma-separated list of methods to
+                            allow: date,status,lading,proof,rating (see also:
+                            --count and --duration)
+    --webhook WEBHOOK     call the /webhook endpoint and register the provided
+                            url
+    --email EMAIL         call the /webhook endpoint and register the provided
+                            email address
+    --sqlite-file SQLITE_FILE
+                            Sqlite database to store our data to
+    --dirname DIRNAME     Where to store downloaded files
+    --scac SCAC           The scac or carrier_id of the carrier to contact
+    --count COUNT         how many times to allow calls with the api key
+                            returned from /sign (1-100 valid)
+    --duration DURATION   how long to allow calls with the api key returned from
+                            /sign (1 to 2592000 seconds)
+    --status STATUS       which statuses to report to the web / email hook, or
+                            'all' to get all updates
+    --dispatch DISPATCH   The filename of the json-encoded file with
+                            [request_body, is_base64_encoded, is_json] stored
+                            inside for dispatching via handle_request() (requires
+                            --database)
 
 ## Imported functions
 

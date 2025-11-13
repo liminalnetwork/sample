@@ -10,9 +10,9 @@ from .shared import get_schema, supported_pretty as supported, get_api_key, pick
 __doc__ = """
 There are 3 functions defined here:
 
-    pickup_CU() - create or update a pickup (not all carriers support updates)
-    pickup_get() - get an existing pickup request (not all carriers support get)
-    pickup_delete() - delete an existing pickup request (not all carriers support delete)
+pickup_CU() - create or update a pickup (not all carriers support updates)
+pickup_get() - get an existing pickup request (not all carriers support get)
+pickup_delete() - delete an existing pickup request (not all carriers support delete)
 
 For more information about which carriers are supported, you can visit:
 https://account.liminalnetwork.com/account/carriers-docs
@@ -44,9 +44,9 @@ def pickup_CU(
 
         scac - scac or carrier_id you are trying to make an pickup post/put against
         data - dict representing the request, whose contents follow the format
-            defined by the relevant JSON schema (<scac>.pickup.<post or put>)
+            defined by the relevant JSON schema ({scac}.pickup.{post or put})
         verify_schema - if True, will validate <data> against the schema
-            returned by get_schema(f'{scac}.pickup.<post for create, put for not create>')
+            returned by get_schema(f'{scac}.pickup.{post for create, put for not create}')
         params - additional query parameters, can include:
             ignore_unprocessed=1/t/y
             debug_upstream=1/t/y
@@ -64,35 +64,48 @@ def pickup_CU(
             is True-ish, will verify that the API exists and is supported
             first by calling `supported()` with the appropriate arguments
 
-    If verify_schema is true-ish, we will make a request to get_schema() to get
+    If `verify_schema` is true-ish, we will make a request to get_schema() to get
     the relevant schema, then verify data using jsonschema (a 3rd party module).
     If no errors are found during schema validation, we will make a post request
     to Liminal Network with default credentials, returning the results of your
     request.
 
-    If verify_schema is false-ish, and check_supported is true-ish then will
+    If `verify_schema` is false-ish, and `check_supported` is true-ish then will
     call supported with appropriate arguments, to make sure the API exists before
     we call it.
 
-    If ignore_unprocessed is 1/t/y, Liminal Network will ignore any fields that
+    If `ignore_unprocessed` is `1/t/y`, Liminal Network will ignore any fields that
     are unprocessed, but provided by the caller, which are normally reported as
     errors to you, before calling the carrier's API.
 
-    If debug_upstream is 1/t/y, and there are no upstream validation errors,
+    If `debug_upstream` is `1/t/y`, and there are no upstream validation errors,
     Liminal Network will return the request that Liminal Network would have sent
     to the carrier's API.
 
-    If istest=1/t/y, and debug_upstream is not one of 1/t/y, Liminal Network
+    If `istest` is `1/t/y`, and `debug_upstream` is not one of `1/t/y`, Liminal Network
     will return either a pre-canned upstream test response, or if the upstream
     API has their own explicit test/QA environment, will ensure the test/QA
     environment is used, and return the response from the carrier.
 
     Sometimes, Liminal Network has chosen to modfiy the output of the Carrier's
-    response; typically to include a "scac" entry, but sometimes to "normalize"
-    error messages into an "errors": [...] entry in the root of the response,
-    etc. If `params` includes a key named "raw" (along with additional query
+    response; typically to include a `scac` entry, but sometimes to `normalize`
+    error messages into an `"errors": [...]` entry in the root of the response,
+    etc. If `params` includes a key named `raw` (along with additional query
     parameters you would like to include in your request to Liminal Network),
     Liminal Network will return the raw Carrier result, without modifications.
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import pickup_CU, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+
+        ebol_response = pickup_CU(
+            scac,
+            pickup_data,
+            True,  # go ahead and verify
+        )
     """
     method = "post" if create else "put"
     scac = scac.lower()
@@ -169,24 +182,36 @@ def pickup_get(
             istest=1/t/y
             raw=1/t/y
 
-    If no carrier-supported named tracking value is provided as part of **params,
+    If no carrier-supported named tracking value is provided as part of `**params`,
     making the call will return the tracking parameters supported.
 
-    If debug_upstream is 1/t/y, and there are no upstream validation errors,
+    If `debug_upstream` is `1/t/y`, and there are no upstream validation errors,
     Liminal Network will return the request that Liminal Network would have sent
     to the carrier's API.
 
-    If istest=1/t/y, and debug_upstream is not one of 1/t/y, Liminal Network
+    If `istest` is `1/t/y`, and `debug_upstream` is not one of `1/t/y`, Liminal Network
     will return either a pre-canned upstream test response, or if the upstream
     API has their own explicit test/QA environment, will ensure the test/QA
     environment is used, and return the response from the carrier.
 
     Sometimes, Liminal Network has chosen to modfiy the output of the Carrier's
-    response; typically to include a "scac" entry, but sometimes to "normalize"
-    error messages into an "errors": [...] entry in the root of the response,
-    etc. If `params` includes a key named "raw" (along with additional query
+    response; typically to include a `scac` entry, but sometimes to `normalize`
+    error messages into an `"errors": [...]` entry in the root of the response,
+    etc. If `params` includes a key named `raw` (along with additional query
     parameters you would like to include in your request to Liminal Network),
     Liminal Network will return the raw Carrier result, without modifications.
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import pickup_get, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+
+        pickup_data = pickup_get(
+            scac,
+            confirmation=...
+        )
     """
     if check_supported:
         supp = supported(scac, True)
@@ -227,24 +252,36 @@ def pickup_delete(
             istest=1/t/y
             raw=1/t/y
 
-    If no carrier-supported named tracking value is provided as part of **params,
+    If no carrier-supported named tracking value is provided as part of `**params`,
     making the call will return the tracking parameters supported.
 
-    If debug_upstream is 1/t/y, and there are no upstream validation errors,
+    If `debug_upstream` is `1/t/y`, and there are no upstream validation errors,
     Liminal Network will return the request that Liminal Network would have sent
     to the carrier's API.
 
-    If istest=1/t/y, and debug_upstream is not one of 1/t/y, Liminal Network
+    If `istest` is `1/t/y`, and `debug_upstream` is not one of `1/t/y`, Liminal Network
     will return either a pre-canned upstream test response, or if the upstream
     API has their own explicit test/QA environment, will ensure the test/QA
     environment is used, and return the response from the carrier.
 
     Sometimes, Liminal Network has chosen to modfiy the output of the Carrier's
-    response; typically to include a "scac" entry, but sometimes to "normalize"
-    error messages into an "errors": [...] entry in the root of the response,
-    etc. If `params` includes a key named "raw" (along with additional query
+    response; typically to include a `scac` entry, but sometimes to `normalize`
+    error messages into an `"errors": [...]` entry in the root of the response,
+    etc. If `params` includes a key named `raw` (along with additional query
     parameters you would like to include in your request to Liminal Network),
     Liminal Network will return the raw Carrier result, without modifications.
+
+    Example:
+
+        # if the contents of src/doc_*.py and src/shared.py are in your path as "ln":
+
+        from ln.doc_client import pickup_delete, settings
+        settings.LIMINAL_NETWORK_API_KEY = ...
+
+        pickup_delete_confirmation = pickup_delete(
+            scac,
+            confirmation=...
+        )
     """
     if check_supported:
         supp = supported(scac, True)

@@ -19,24 +19,29 @@ Q: Why not just use something else that does this already?
 A:
 See the answer to the first question, people keep changing stuff, which breaks
 super simple stuff. Like generating basic docs in a Markdown file. Pydoc to
-text was pretty close to markdown already.
+text was pretty close to markdown already. If we were super pedantic, could
+have left most of the html stuff, as html is valid Markdown... but that makes
+for ugly markdown.
 
 Q: But dude, there are packages that do this already on pypi...
 A:
-We keep going around in circles here, this one module does 2 things:
+We keep going around in circles here, this one module does 3 things:
 1. Outputs Markdown versions of a pydoc from the dotted module name
 2. If .md file names are provided on the command line, will package them
    into a .tar file and send to stdout
+3. If --stdin is provided, will take stdin as a tarfile of .py files for
+   documentation, packing the .md output as a .tar sent to stdout
 
 Q: Wait, why spew to a tar file?
 A:
 `docker save` is great, but having to dig through 1+ gig tar dumps to
 extract 40k of docs is slow. This cuts doc build time to <20 seconds, even
-on platter-based USB drives. Check the Makefile for details.
+on platter-based USB drives. Check the Makefile for details where we pipe
+a tar file of source code in, and get a tar file of docs out.
 
 """
 
-__author__ = "Josiah Carlson, after modifying existing pydoc.py"
+__author__ = "Josiah Carlson, after modifying existing pydoc.py Text and Html formatting"
 
 import argparse
 import builtins
@@ -44,8 +49,11 @@ from collections import deque
 import inspect
 import io
 import itertools
+import os
 import re
 import sys
+import tarfile
+import tempfile
 import urllib
 
 from pydoc import (
@@ -111,6 +119,8 @@ class MarkdownRepr(Repr):
             return '[%s instance]' % x.__class__.__name__
 
     def escape(self, text):
+        if text[:1] == " ":
+            return text
         return replace(text, '&', '&amp;', '<', '&lt;', '>', '&gt;', "_", "\\_", "*", "\\*", "#", "\\#")
 
 class MarkdownDoc(Doc):
@@ -174,8 +184,16 @@ class MarkdownDoc(Doc):
 
     def filelink(self, url, path=None):
         """Make a link to source file."""
+        # strip out root path if link is to file names
+        if url.startswith(sys.path[0]):
+            url = url[len(sys.path[0]):].lstrip("/")
+
         if path is None:
             path = url
+
+        if path.startswith(sys.path[0]):
+            path = path[len(sys.path[0]):].lstrip("/")
+
         return f"[{path}]({url})"
 
     def namelink(self, name, *dicts):
@@ -196,9 +214,17 @@ class MarkdownDoc(Doc):
                                 r'RFC[- ]?(\d+)|'
                                 r'PEP[- ]?(\d+)|'
                                 r'(self\.)?(\w+))')
+        indented = 0
         while match := pattern.search(text, here):
             start, end = match.span()
             results.append(escape(text[here:start]))
+            if "\n" in results[-1]:
+                indented = "\n    " in results[-1]
+
+            if indented:
+                results.append(text[start:end])
+                here = end
+                continue
 
             all, scheme, rfc, pep, selfdot, name = match.groups()
             if scheme:
@@ -227,13 +253,13 @@ class MarkdownDoc(Doc):
 
     def preformat(self, text):
         """Format literal preformatted text."""
-        lines = self.escape(text.expandtabs()).split("\n")
+        lines = text.expandtabs().split("\n")
         for i, l in enumerate(lines):
             ld = len(l) - len(l.lstrip())
             if ld:
                 lines[i] = ld * " " + l.lstrip().replace("  ", "&nbsp; ")
             else:
-                lines[i] = l.replace("  ", "&nbsp; ")
+                lines[i] = self.escape(l.replace("  ", "&nbsp; "))
 
         return "\n".join(lines)
         
@@ -787,6 +813,7 @@ md = MarkdownDoc()
 
 def writedoc(thing, forceload=0):
     """Write Markdown documentation to a file in the current directory."""
+    old = set(sys.modules)
     object, name = resolve(thing, forceload)
     page = md.page(describe(object), md.document(object, name))
     with open(name + '.md', 'w', encoding='utf-8') as file:
@@ -837,7 +864,10 @@ def parse_args(args=None):
     parser.add_argument("--skip-object", default=False, action="store_true",
         help="If provided, will skip listing builtins.object as a parent class."
     )
-    parser.add_argument("path", nargs="+",
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--stdin", default=False, action="store_true",
+        help="If provided, will read stdin as though it was an uncompressed tar file of .py files to run pydoc_md on. Implies --tar .")
+    group.add_argument("path", nargs="*",
         help="Any dotted.module name will be imported and processed into a dotted.module.md . "
                 "File paths ending with '.py', [./]*dotted/module.py -> dotted.module, and processed into dotted.module.md . "
                 "File paths ending with '.md' will be added to stdout as part of a tar file. "
@@ -855,6 +885,27 @@ def main(parsed=None):
         npml = True
     if args.skip_object:
         skip_object = True
+
+    path = None
+    if args.stdin:
+        args.tar = True
+        # read tar input
+        path =  tempfile.TemporaryDirectory()
+        sys.path.insert(0, path.name)
+        a = io.BytesIO()
+        a.write(sys.stdin.read().encode())
+        a.seek(0)
+        files = tarfile.open(mode="r", fileobj=a)
+        files.extractall(path.name)
+        for dp, dn, fn in os.walk(path.name):
+            for f in fn:
+                if f.endswith(".py"):
+                    dest = os.path.join(dp, f)
+                    args.path.append(dest[len(path.name):].lstrip("/"))
+
+        args.path.sort()
+        args.path.reverse()
+
 
     for arg in args.path:
         # spew markdown files as tar

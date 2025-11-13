@@ -1,6 +1,6 @@
 # module src.shared
 
-## src.shared [/app/src/shared.py](/app/src/shared.py)
+## src.shared [src/shared.py](src/shared.py)
 
 This module includes functions shared by other portions of this client
 implementation.
@@ -34,7 +34,7 @@ Data descriptors defined here:
 Args:
 
     scac_or_carrier_id - will use the mapping defined on
-        [settings](#settings).CARRIER_TO_CONFIG to discover the proper API key to use.
+        settings.CARRIER_TO_CONFIG to discover the proper API key to use.
 
 Returns:
 
@@ -44,7 +44,7 @@ Returns:
 
 Args:
 
-    name - &lt;scac&gt;.&lt;api&gt;.&lt;http method&gt;
+    name - {scac}.{api}.{http method}
 
 Returns:
 
@@ -52,8 +52,8 @@ Returns:
         [name, name, ...]
 
 
-    If name was previously returned by [get_schema](#-get_schema)(), or was listed:
-    [https://account.liminalnetwork.com/account/carriers-schemas](https://account.liminalnetwork.com/account/carriers-schemas)
+    If name was previously returned by get_schema(), or was listed:
+    https://account.liminalnetwork.com/account/carriers-schemas
     Will return:
         (json_schema, last_modified)
 
@@ -84,7 +84,7 @@ Args:
 
 Returns a list of methods supported by the API, like:
 
-    ["&lt;scac&gt;.ebol.post", ...]
+    ["<scac&gt;.ebol.post", ...]
 
 ## Data
 
