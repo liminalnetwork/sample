@@ -4,9 +4,9 @@
 
 There are 3 functions defined here:
 
-[ebol_CU](#-ebol_CU)() - create or update an eBOL (not all carriers support updates)
-[ebol_get](#-ebol_get)() - get an existing eBOL (not all carriers support get)
-[ebol_delete](#-ebol_delete)() - delete an existing eBOL (not all carriers support delete)
+[ebol_CU](#-ebol_CU)() - create or update an eBOL (not all carriers support updates)  
+[ebol_get](#-ebol_get)() - get an existing eBOL (not all carriers support get)  
+[ebol_delete](#-ebol_delete)() - delete an existing eBOL (not all carriers support delete)  
 
 For more information about which carriers are supported, you can visit:
 [https://account.liminalnetwork.com/account/carriers-docs](https://account.liminalnetwork.com/account/carriers-docs)
@@ -90,7 +90,7 @@ Example:
     ebol_response = ebol_CU(
         scac,
         ebol_data,
-        True,&amp;nbsp; \# go ahead and verify
+        True,&nbsp; \# go ahead and verify
     )
 
 ### <a name="-ebol_delete">ebol_delete</a>(scac: str, check\_supported: bool = False, \*\*params: dict)

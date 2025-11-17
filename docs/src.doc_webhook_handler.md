@@ -68,7 +68,7 @@ shipment to whatever was provided in the post_data.
 Returns one of:
 
     "ok"
-    "error-&lt;what was the problem&gt;"
+    "error-&lt;what was the problem>"
 
 ### <a name="-handle_image">handle_image</a>(conn, post\_data: dict, now: str, ref: str) -&gt; str
 

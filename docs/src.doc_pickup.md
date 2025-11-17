@@ -4,9 +4,9 @@
 
 There are 3 functions defined here:
 
-[pickup_CU](#-pickup_CU)() - create or update a pickup (not all carriers support updates)
-[pickup_get](#-pickup_get)() - get an existing pickup request (not all carriers support get)
-[pickup_delete](#-pickup_delete)() - delete an existing pickup request (not all carriers support delete)
+[pickup_CU](#-pickup_CU)() - create or update a pickup (not all carriers support updates)  
+[pickup_get](#-pickup_get)() - get an existing pickup request (not all carriers support get)  
+[pickup_delete](#-pickup_delete)() - delete an existing pickup request (not all carriers support delete)  
 
 For more information about which carriers are supported, you can visit:
 [https://account.liminalnetwork.com/account/carriers-docs](https://account.liminalnetwork.com/account/carriers-docs)
@@ -90,7 +90,7 @@ Example:
     ebol_response = pickup_CU(
         scac,
         pickup_data,
-        True,&amp;nbsp; \# go ahead and verify
+        True,&nbsp; \# go ahead and verify
     )
 
 ### <a name="-pickup_delete">pickup_delete</a>(scac: str, check\_supported: bool = False, \*\*params: dict)

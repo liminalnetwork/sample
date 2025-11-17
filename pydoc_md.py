@@ -248,8 +248,17 @@ class MarkdownDoc(Doc):
             else:
                 results.append(self.namelink(name, classes))
             here = end
-        results.append(escape(text[here:]))
-        return ''.join(results)
+        if indented:
+            results.append(text[here:])
+        else:
+            results.append(escape(text[here:]))
+
+        lines = ''.join(results).split("\n")
+        for i, l in enumerate(lines):
+            if l[:1] == '[' and l.split()[0][-2:] == "()":
+                lines[i] = l.rstrip() + "  "
+        return "\n".join(lines)
+
 
     def preformat(self, text):
         """Format literal preformatted text."""
@@ -259,7 +268,7 @@ class MarkdownDoc(Doc):
             if ld:
                 lines[i] = ld * " " + l.lstrip().replace("  ", "&nbsp; ")
             else:
-                lines[i] = self.escape(l.replace("  ", "&nbsp; "))
+                lines[i] = self.escape(l).replace("  ", "&nbsp; ")
 
         return "\n".join(lines)
         

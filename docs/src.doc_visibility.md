@@ -4,12 +4,12 @@
 
 This module defines functions for Liminal Network's Visibility API package:
 
-[get_status](#-get_status)()
-[get_pdf_images](#-get_pdf_images)()
-[get_individual_images](#-get_individual_images)()
-[register_hook](#-register_hook)()
-[get_hook_status](#-get_hook_status)()
-[cancel_hook](#-cancel_hook)()
+[get_status](#-get_status)()  
+[get_pdf_images](#-get_pdf_images)()  
+[get_individual_images](#-get_individual_images)()  
+[register_hook](#-register_hook)()  
+[get_hook_status](#-get_hook_status)()  
+[cancel_hook](#-cancel_hook)()  
 
 The functions [get_status](#-get_status)(), [get_pdf_images](#-get_pdf_images)(), and [get_individual_images](#-get_individual_images)()
 directly return information about a given shipment, while [register_hook](#-register_hook)(),
