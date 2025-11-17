@@ -13,7 +13,7 @@ docs.build: docs-container.build src/*.py # make the documentation with the docs
 	tar -cf src.tar src
 	cat src.tar | docker run -i --rm liminal-doc-client python3 pydoc_md.py --stdin --no-module-parent --skip-object > docs/docs.tar
 	rm -f docs/*.md
-	cd docs && cat docs.tar | tar -x --overwrite
+	cd docs && cat docs.tar | tar -x
 	rm docs/docs.tar src.tar
 	python3 ~/replace.py "(src/" "(../src/" ./docs/*.md
 	@touch docs.build

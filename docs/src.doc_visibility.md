@@ -19,8 +19,8 @@ or email address.
 
 ## Builtin modules
 
-[json](https://docs.python.org/3/library/json.html)
-[os](https://docs.python.org/3/library/os.html)
+[json](https://docs.python.org/3/library/json.html)  
+[os](https://docs.python.org/3/library/os.html)  
 [urllib](https://docs.python.org/3/library/urllib.html)
 
 ## Functions defined here

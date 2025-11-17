@@ -27,8 +27,8 @@ copying/pasting, you should:
 
 ## Builtin modules
 
-[json](https://docs.python.org/3/library/json.html)
-[os](https://docs.python.org/3/library/os.html)
+[json](https://docs.python.org/3/library/json.html)  
+[os](https://docs.python.org/3/library/os.html)  
 [sqlite3](https://docs.python.org/3/library/sqlite3.html)
 
 ## Classes defined here
