@@ -1,13 +1,13 @@
 # module src.shared
 
-## src.shared [src/shared.py](src/shared.py)
+## src.shared [src/shared.py](../src/shared.py)
 
 This module includes functions shared by other portions of this client
 implementation.
 
 ## Builtin modules
 
-[json](https://docs.python.org/3/library/json.html)  
+[json](https://docs.python.org/3/library/json.html)
 [urllib](https://docs.python.org/3/library/urllib.html)
 
 ## Classes defined here

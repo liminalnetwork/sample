@@ -1,6 +1,6 @@
 # module src.doc_presigned
 
-## src.doc_presigned [src/doc_presigned.py](src/doc_presigned.py)
+## src.doc_presigned [src/doc_presigned.py](../src/doc_presigned.py)
 
 This module defines one function:
 
@@ -28,7 +28,7 @@ creating transactional email links:
 
 ## Builtin modules
 
-[json](https://docs.python.org/3/library/json.html)  
+[json](https://docs.python.org/3/library/json.html)
 [urllib](https://docs.python.org/3/library/urllib.html)
 
 ## Functions defined here
@@ -73,7 +73,7 @@ Example:
 
 ## Imported functions
 
-From **[src.shared](src.shared.md)** [src/shared.py](src/shared.py)
+From **[src.shared](src.shared.md)** [src/shared.py](../src/shared.py)
 * [get_api_key()](src.shared.md#-get_api_key)
 
 ## Data

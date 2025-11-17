@@ -1,6 +1,6 @@
 # module src.doc_pickup
 
-## src.doc_pickup [src/doc_pickup.py](src/doc_pickup.py)
+## src.doc_pickup [src/doc_pickup.py](../src/doc_pickup.py)
 
 There are 3 functions defined here:
 
@@ -16,7 +16,7 @@ All carrier schemas and last modified date can be found:
 
 ## Builtin modules
 
-[json](https://docs.python.org/3/library/json.html)  
+[json](https://docs.python.org/3/library/json.html)
 [urllib](https://docs.python.org/3/library/urllib.html)
 
 ## Functions defined here
@@ -189,7 +189,7 @@ Example:
 
 ## Imported functions
 
-From **[src.shared](src.shared.md)** [src/shared.py](src/shared.py)
+From **[src.shared](src.shared.md)** [src/shared.py](../src/shared.py)
 * [get_api_key()](src.shared.md#-get_api_key)
 * [get_schema()](src.shared.md#-get_schema)
 * [supported()](src.shared.md#-supported)

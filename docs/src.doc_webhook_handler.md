@@ -1,15 +1,15 @@
 # module src.doc_webhook_handler
 
-## src.doc_webhook_handler [src/doc_webhook_handler.py](src/doc_webhook_handler.py)
+## src.doc_webhook_handler [src/doc_webhook_handler.py](../src/doc_webhook_handler.py)
 
 \# Copyright 2025 Liminal Network
 \# See LICENSE for details
 
 ## Builtin modules
 
-[base64](https://docs.python.org/3/library/base64.html)  
-[datetime](https://docs.python.org/3/library/datetime.html)  
-[os](https://docs.python.org/3/library/os.html)  
+[base64](https://docs.python.org/3/library/base64.html)
+[datetime](https://docs.python.org/3/library/datetime.html)
+[os](https://docs.python.org/3/library/os.html)
 [urllib](https://docs.python.org/3/library/urllib.html)
 
 ## Functions defined here
@@ -155,7 +155,7 @@ Note: syntax is valid SQLite3, unknown compatibility with other databases.
 
 ## Imported functions
 
-From **[src.doc_visibility](src.doc_visibility.md)** [src/doc_visibility.py](src/doc_visibility.py)
+From **[src.doc_visibility](src.doc_visibility.md)** [src/doc_visibility.py](../src/doc_visibility.py)
 * [get_individual_images()](src.doc_visibility.md#-get_individual_images)
 * [get_status()](src.doc_visibility.md#-get_status)
 

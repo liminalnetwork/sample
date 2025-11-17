@@ -15,6 +15,7 @@ docs.build: docs-container.build src/*.py # make the documentation with the docs
 	rm -f docs/*.md
 	cd docs && cat docs.tar | tar -x --overwrite
 	rm docs/docs.tar src.tar
+	python3 ~/replace.py "(src/" "(../src/" ./docs/*.md
 	@touch docs.build
 
 docs: docs.build # entry point for making docs

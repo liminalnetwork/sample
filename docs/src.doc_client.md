@@ -1,6 +1,6 @@
 # module src.doc_client
 
-## src.doc_client [src/doc_client.py](src/doc_client.py)
+## src.doc_client [src/doc_client.py](../src/doc_client.py)
 
 Names available in this module are imported from:
 
@@ -27,8 +27,8 @@ copying/pasting, you should:
 
 ## Builtin modules
 
-[json](https://docs.python.org/3/library/json.html)  
-[os](https://docs.python.org/3/library/os.html)  
+[json](https://docs.python.org/3/library/json.html)
+[os](https://docs.python.org/3/library/os.html)
 [sqlite3](https://docs.python.org/3/library/sqlite3.html)
 
 ## Classes defined here
@@ -126,20 +126,20 @@ for live usage information.
 
 ## Imported functions
 
-From **[src.doc_ebol](src.doc_ebol.md)** [src/doc_ebol.py](src/doc_ebol.py)
+From **[src.doc_ebol](src.doc_ebol.md)** [src/doc_ebol.py](../src/doc_ebol.py)
 * [ebol_CU()](src.doc_ebol.md#-ebol_CU)
 * [ebol_delete()](src.doc_ebol.md#-ebol_delete)
 * [ebol_get()](src.doc_ebol.md#-ebol_get)
 
-From **[src.doc_pickup](src.doc_pickup.md)** [src/doc_pickup.py](src/doc_pickup.py)
+From **[src.doc_pickup](src.doc_pickup.md)** [src/doc_pickup.py](../src/doc_pickup.py)
 * [pickup_CU()](src.doc_pickup.md#-pickup_CU)
 * [pickup_delete()](src.doc_pickup.md#-pickup_delete)
 * [pickup_get()](src.doc_pickup.md#-pickup_get)
 
-From **[src.doc_presigned](src.doc_presigned.md)** [src/doc_presigned.py](src/doc_presigned.py)
+From **[src.doc_presigned](src.doc_presigned.md)** [src/doc_presigned.py](../src/doc_presigned.py)
 * [limited_use_key()](src.doc_presigned.md#-limited_use_key)
 
-From **[src.doc_visibility](src.doc_visibility.md)** [src/doc_visibility.py](src/doc_visibility.py)
+From **[src.doc_visibility](src.doc_visibility.md)** [src/doc_visibility.py](../src/doc_visibility.py)
 * [cancel_hook()](src.doc_visibility.md#-cancel_hook)
 * [get_hook_status()](src.doc_visibility.md#-get_hook_status)
 * [get_individual_images()](src.doc_visibility.md#-get_individual_images)
@@ -147,7 +147,7 @@ From **[src.doc_visibility](src.doc_visibility.md)** [src/doc_visibility.py](src
 * [get_status()](src.doc_visibility.md#-get_status)
 * [register_hook()](src.doc_visibility.md#-register_hook)
 
-From **[src.doc_webhook_handler](src.doc_webhook_handler.md)** [src/doc_webhook_handler.py](src/doc_webhook_handler.py)
+From **[src.doc_webhook_handler](src.doc_webhook_handler.md)** [src/doc_webhook_handler.py](../src/doc_webhook_handler.py)
 * [get_all_to_db()](src.doc_webhook_handler.md#-get_all_to_db)
 * [get_images_to_db()](src.doc_webhook_handler.md#-get_images_to_db)
 * [get_status_to_db()](src.doc_webhook_handler.md#-get_status_to_db)
@@ -159,7 +159,7 @@ From **[src.doc_webhook_handler](src.doc_webhook_handler.md)** [src/doc_webhook_
 * [insert_data()](src.doc_webhook_handler.md#-insert_data)
 * [setup_schema()](src.doc_webhook_handler.md#-setup_schema)
 
-From **[src.shared](src.shared.md)** [src/shared.py](src/shared.py)
+From **[src.shared](src.shared.md)** [src/shared.py](../src/shared.py)
 * [get_api_key()](src.shared.md#-get_api_key)
 * [get_schema()](src.shared.md#-get_schema)
 * [supported()](src.shared.md#-supported)
