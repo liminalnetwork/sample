@@ -21,7 +21,12 @@ https://account.liminalnetwork.com/account/carriers-schemas
 """
 
 
-from .shared import get_schema, supported_pretty as supported, get_api_key, ebol_url
+from .shared import (
+    get_schema,
+    supported_pretty as supported,
+    get_api_key,
+    ebol_url,
+)
 
 # --- Electronic Bill of Lading eBOL Create, Update, Get, and Delete examples (POST, PUT, GET, DELETE)
 

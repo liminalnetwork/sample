@@ -41,14 +41,15 @@ a tar file of source code in, and get a tar file of docs out.
 
 """
 
-__author__ = "Josiah Carlson, after modifying existing pydoc.py Text and Html formatting"
+__author__ = (
+    "Josiah Carlson, after modifying existing pydoc.py Text and Html formatting"
+)
 
 import argparse
 import builtins
 from collections import deque
 import inspect
 import io
-import itertools
 import os
 import re
 import sys
@@ -68,10 +69,10 @@ from pydoc import (
     getdoc,
     isdata,
     classname,
-    Format,
     classify_class_attrs,
     sort_attributes,
     replace,
+    parentname,
 )
 
 
@@ -86,8 +87,10 @@ npml = skip_object = False
 
 # -------------------------------------------- Markdown documentation generator
 
+
 class MarkdownRepr(Repr):
     """Class for safely making a Markdown representation of a Python object."""
+
     def __init__(self):
         Repr.__init__(self)
         self.maxlist = self.maxtuple = 20
@@ -95,8 +98,8 @@ class MarkdownRepr(Repr):
         self.maxstring = self.maxother = 100
 
     def repr1(self, x, level):
-        if hasattr(type(x), '__name__'):
-            methodname = 'repr_' + '_'.join(type(x).__name__.split())
+        if hasattr(type(x), "__name__"):
+            methodname = "repr_" + "_".join(type(x).__name__.split())
             if hasattr(self, methodname):
                 return getattr(self, methodname)(x, level)
         return cram(stripid(repr(x)), self.maxother)
@@ -104,10 +107,10 @@ class MarkdownRepr(Repr):
     def repr_string(self, x, level):
         test = cram(x, self.maxstring)
         testrepr = repr(test)
-        if '\\' in test and '\\' not in replace(testrepr, r'\\', ''):
+        if "\\" in test and "\\" not in replace(testrepr, r"\\", ""):
             # Backslashes are only literal in the string and are never
             # needed to make any special characters, so show a raw string.
-            return 'r' + testrepr[0] + test + testrepr[0]
+            return "r" + testrepr[0] + test + testrepr[0]
         return testrepr
 
     repr_str = repr_string
@@ -115,13 +118,28 @@ class MarkdownRepr(Repr):
     def repr_instance(self, x, level):
         try:
             return cram(stripid(repr(x)), self.maxstring)
-        except:
-            return '[%s instance]' % x.__class__.__name__
+        except Exception:
+            return "[%s instance]" % x.__class__.__name__
 
     def escape(self, text):
         if text[:1] == " ":
             return text
-        return replace(text, '&', '&amp;', '<', '&lt;', '>', '&gt;', "_", "\\_", "*", "\\*", "#", "\\#")
+        return replace(
+            text,
+            "&",
+            "&amp;",
+            "<",
+            "&lt;",
+            ">",
+            "&gt;",
+            "_",
+            "\\_",
+            "*",
+            "\\*",
+            "#",
+            "\\#",
+        )
+
 
 class MarkdownDoc(Doc):
     """Formatter class for Markdown documentation."""
@@ -136,11 +154,12 @@ class MarkdownDoc(Doc):
         """Format a string in bold by overstriking."""
         return "**" + text.replace("*", "\\*") + "**"
 
-    def indent(self, text, prefix='    '):
+    def indent(self, text, prefix="    "):
         """Indent text by prepending a given prefix to each line."""
-        if not text: return ''
-        lines = [(prefix + line).rstrip() for line in text.split('\n')]
-        return '\n'.join(lines)
+        if not text:
+            return ""
+        lines = [(prefix + line).rstrip() for line in text.split("\n")]
+        return "\n".join(lines)
 
     def _heading(self, text, h="#"):
         return h + " " + text.strip().replace("\n", "<br />")
@@ -150,10 +169,19 @@ class MarkdownDoc(Doc):
         # clean_contents = self.indent(contents).rstrip()
         clean_contents = contents.rstrip()
         if clean_contents:
-            return self._heading(title, pfx) + '\n\n' + clean_contents
+            return self._heading(title, pfx) + "\n\n" + clean_contents
         return self._heading(title, pfx)
 
-    def bigsection(self, title, cls, contents, width=None, prelude=None, marginalia=None, gap=None):
+    def bigsection(
+        self,
+        title,
+        cls,
+        contents,
+        width=None,
+        prelude=None,
+        marginalia=None,
+        gap=None,
+    ):
         """Format a section with a big heading."""
         c = []
         if prelude and prelude.strip():
@@ -176,7 +204,7 @@ class MarkdownDoc(Doc):
                 return self.docclass(*args)
             if inspect.isroutine(object):
                 return self.docroutine(*args)
-        except AttributeError as e:
+        except AttributeError:
             raise
         if inspect.isdatadescriptor(object):
             return self.docdata(*args)
@@ -186,13 +214,13 @@ class MarkdownDoc(Doc):
         """Make a link to source file."""
         # strip out root path if link is to file names
         if url.startswith(sys.path[0]):
-            url = url[len(sys.path[0]):].lstrip("/")
+            url = url[len(sys.path[0]) :].lstrip("/")
 
         if path is None:
             path = url
 
         if path.startswith(sys.path[0]):
-            path = path[len(sys.path[0]):].lstrip("/")
+            path = path[len(sys.path[0]) :].lstrip("/")
 
         return f"[{path}]({url})"
 
@@ -210,10 +238,12 @@ class MarkdownDoc(Doc):
         escape = escape or self.escape
         results = []
         here = 0
-        pattern = re.compile(r'\b((http|https|ftp)://\S+[\w/]|'
-                                r'RFC[- ]?(\d+)|'
-                                r'PEP[- ]?(\d+)|'
-                                r'(self\.)?(\w+))')
+        pattern = re.compile(
+            r"\b((http|https|ftp)://\S+[\w/]|"
+            r"RFC[- ]?(\d+)|"
+            r"PEP[- ]?(\d+)|"
+            r"(self\.)?(\w+))"
+        )
         indented = 0
         while match := pattern.search(text, here):
             start, end = match.span()
@@ -228,22 +258,22 @@ class MarkdownDoc(Doc):
 
             all, scheme, rfc, pep, selfdot, name = match.groups()
             if scheme:
-                url = escape(all).replace('"', '&quot;')
+                url = escape(all).replace('"', "&quot;")
                 results.append(self.filelink(url, url))
             elif rfc:
-                url = 'https://www.rfc-editor.org/rfc/rfc%d.txt' % int(rfc)
+                url = "https://www.rfc-editor.org/rfc/rfc%d.txt" % int(rfc)
                 results.append(self.filelink(url, escape(all)))
             elif pep:
-                url = 'https://peps.python.org/pep-%04d/' % int(pep)
+                url = "https://peps.python.org/pep-%04d/" % int(pep)
                 results.append(self.filelink(url, escape(all)))
             elif selfdot:
                 # Create a link for methods like 'self.method(...)'
                 # and use <strong> for attributes like 'self.attr'
-                if text[end:end+1] == '(':
-                    results.append('self. ' + self.namelink(name, methods))
+                if text[end : end + 1] == "(":
+                    results.append("self. " + self.namelink(name, methods))
                 else:
-                    results.append(f'self.{name}')
-            elif text[end:end+1] == '(':
+                    results.append(f"self.{name}")
+            elif text[end : end + 1] == "(":
                 results.append(self.namelink(name, methods, funcs, classes))
             else:
                 results.append(self.namelink(name, classes))
@@ -253,12 +283,11 @@ class MarkdownDoc(Doc):
         else:
             results.append(escape(text[here:]))
 
-        lines = ''.join(results).split("\n")
+        lines = "".join(results).split("\n")
         for i, l in enumerate(lines):
-            if l[:1] == '[' and l.split()[0][-2:] == "()":
+            if l[:1] == "[" and l.split()[0][-2:] == "()":
                 lines[i] = l.rstrip() + "  "
         return "\n".join(lines)
-
 
     def preformat(self, text):
         """Format literal preformatted text."""
@@ -271,7 +300,7 @@ class MarkdownDoc(Doc):
                 lines[i] = self.escape(l).replace("  ", "&nbsp; ")
 
         return "\n".join(lines)
-        
+
         return f"""```
 {text}
 ```"""
@@ -285,7 +314,8 @@ class MarkdownDoc(Doc):
         li = len(list) - 1
 
         return "\n".join(
-            prefix + format(item) + ("" if i == li else suf1) for i, item in enumerate(list)
+            prefix + format(item) + ("" if i == li else suf1)
+            for i, item in enumerate(list)
         )
 
     # multicolumn is ugly, lists are less ugly
@@ -296,7 +326,7 @@ class MarkdownDoc(Doc):
         name, module = object.__name__, sys.modules.get(object.__module__)
         cn = classname(object, modname)
         if hasattr(module, name) and getattr(module, name) is object:
-            link = dict[name]
+            # link = dict[name]
             mn = module.__name__
             return self.filelink(f"{mn}.md#{name}", cn)
         return cn
@@ -306,15 +336,15 @@ class MarkdownDoc(Doc):
         link = None
         name, module = object.__name__, sys.modules.get(object.__module__)
         if hasattr(module, name) and getattr(module, name) is object:
-            if '.' in object.__qualname__:
-                name = object.__qualname__.rpartition('.')[0]
+            if "." in object.__qualname__:
+                name = object.__qualname__.rpartition(".")[0]
                 if object.__module__ != modname:
-                    link = '%s.md#%s' % (module.__name__, name)
+                    link = "%s.md#%s" % (module.__name__, name)
                 else:
-                    link = '#%s' % name
+                    link = "#%s" % name
             else:
                 if object.__module__ != modname:
-                    link = '%s.md' % module.__name__
+                    link = "%s.md" % module.__name__
         if link:
             name = parentname(object, modname)
             return self.filelink(link, name)
@@ -338,11 +368,11 @@ class MarkdownDoc(Doc):
         if shadowed:
             return self.grey(name)
         if path:
-            url = '%s.%s.md' % (path, name)
+            url = "%s.%s.md" % (path, name)
         else:
-            url = '%s.md' % name
+            url = "%s.md" % name
         if ispackage:
-            text = '*%s* (package)' % name
+            text = "*%s* (package)" % name
         else:
             text = name
         return self.filelink(url, text)
@@ -363,22 +393,28 @@ class MarkdownDoc(Doc):
                 cl = self.classlink(c, modname)
                 parent = ""
                 if skip_object:
-                    bases = tuple(b for b in bases if not (b is builtins.object))
+                    bases = tuple(
+                        b for b in bases if not (b is builtins.object)
+                    )
                 if bases and bases != (parent,):
                     parents = []
                     for base in bases:
                         parents.append(self.classlink(base, modname))
-                    parent = ' (' + ', '.join(parents) + ')'
+                    parent = " (" + ", ".join(parents) + ")"
                 result.append(prefix + "* " + cl + parent)
             elif isinstance(entry, list):
                 pp = "" if skipped else "  "
-                result.extend(pp + prefix + row for row in self.formattree(
-                    entry, modname, c).rstrip().split("\n"))
+                result.extend(
+                    pp + prefix + row
+                    for row in self.formattree(entry, modname, c)
+                    .rstrip()
+                    .split("\n")
+                )
         return "\n".join(result)
 
     def docmodule(self, object, name=None, mod=None, *ignored):
         """Produce Markdown documentation for a module object."""
-        name = object.__name__ # ignore the passed-in name
+        name = object.__name__  # ignore the passed-in name
         try:
             all = object.__all__
         except AttributeError:
@@ -387,33 +423,33 @@ class MarkdownDoc(Doc):
         if npml:
             linkedname = name
         else:
-            parts = name.split('.')
+            parts = name.split(".")
             links = []
-            for i in range(len(parts)-1):
-                links.append(self.filelink('.'.join(parts[:i+1]), parts[i]))
-            linkedname = '.'.join(links + parts[-1:])
+            for i in range(len(parts) - 1):
+                links.append(self.filelink(".".join(parts[: i + 1]), parts[i]))
+            linkedname = ".".join(links + parts[-1:])
         head = self.section(linkedname, "", pfx="##")
         try:
             path = inspect.getabsfile(object)
             url = urllib.parse.quote(path)
             filelink = self.filelink(url, path)
         except TypeError:
-            filelink = '(built-in)'
+            filelink = "(built-in)"
         info = []
-        if hasattr(object, '__version__'):
+        if hasattr(object, "__version__"):
             version = str(object.__version__)
-            if version[:11] == '$' + 'Revision: ' and version[-1:] == '$':
+            if version[:11] == "$" + "Revision: " and version[-1:] == "$":
                 version = version[11:-1].strip()
-            info.append('version %s' % self.escape(version))
-        if hasattr(object, '__date__'):
+            info.append("version %s" % self.escape(version))
+        if hasattr(object, "__date__"):
             info.append(self.escape(str(object.__date__)))
         if info:
-            head = head + ' (%s)' % ', '.join(info)
+            head = head + " (%s)" % ", ".join(info)
         docloc = self.getdocloc(object)
         if docloc is not None:
             docloc = self.filelink(docloc, "Module Reference")
         else:
-            docloc = ''
+            docloc = ""
         result = [head.rstrip() + " " + filelink + "\n\n" + docloc]
         result[-1] = result[-1].rstrip()
 
@@ -428,36 +464,40 @@ class MarkdownDoc(Doc):
         classes, cdict = [], {}
         for key, value in inspect.getmembers(object, inspect.isclass):
             # if __all__ exists, believe it.  Otherwise use old heuristic.
-            if (all is not None or
-                (inspect.getmodule(value) or object) is object):
+            if (
+                all is not None
+                or (inspect.getmodule(value) or object) is object
+            ):
                 if visiblename(key, all, object):
                     classes.append((key, value))
-                    cdict[key] = cdict[value] = '#' + key
+                    cdict[key] = cdict[value] = "#" + key
         for key, value in classes:
             for base in value.__bases__:
                 key, modname = base.__name__, base.__module__
                 module = sys.modules.get(modname)
                 if modname != name and module and hasattr(module, key):
                     if getattr(module, key) is base:
-                        if not key in cdict:
-                            cdict[key] = cdict[base] = modname + '.md#' + key
+                        if key not in cdict:
+                            cdict[key] = cdict[base] = modname + ".md#" + key
         funcs, fdict = [], {}
         imported_funcs = {}
         for key, value in inspect.getmembers(object, inspect.isroutine):
             # if __all__ exists, believe it.  Otherwise use a heuristic.
-            if (all is not None
+            if (
+                all is not None
                 or inspect.isbuiltin(value)
-                or (inspect.getmodule(value) or object) is object):
+                or (inspect.getmodule(value) or object) is object
+            ):
                 if visiblename(key, all, object):
                     funcs.append((key, value))
-                    fdict[key] = '#-' + key
+                    fdict[key] = "#-" + key
                     if inspect.isfunction(value):
                         fdict[value] = fdict[key]
             elif "lib/python" not in inspect.getmodule(value).__file__:
                 mn = inspect.getmodule(value).__name__
                 if mn not in imported_funcs:
                     imported_funcs[mn] = []
-                link = mn + '.md#-' + key
+                link = mn + ".md#-" + key
                 imported_funcs[mn].append(self.filelink(link, f"{key}()"))
         data = []
         for key, value in inspect.getmembers(object, isdata):
@@ -468,49 +508,71 @@ class MarkdownDoc(Doc):
         if doc:
             result.append(doc)
 
-        if hasattr(object, '__path__'):
+        if hasattr(object, "__path__"):
             modpkgs = []
-            for importer, modname, ispkg in pkgutil.iter_modules(object.__path__):
+            for importer, modname, ispkg in pkgutil.iter_modules(
+                object.__path__
+            ):
                 modpkgs.append((modname, name, ispkg, 0))
             modpkgs.sort()
             contents = self.multicolumn(modpkgs, self.modpkglink)
-            result.append(self.bigsection(
-                'Package Contents', 'pkg-content', contents))
+            result.append(
+                self.bigsection("Package Contents", "pkg-content", contents)
+            )
         else:
             if modules:
                 contents = self.multicolumn(
-                    modules, lambda t: self.modulelink(t[1]))
-                result.append(self.bigsection(
-                    'Imported modules', 'pkg-content', contents))
+                    modules, lambda t: self.modulelink(t[1])
+                )
+                result.append(
+                    self.bigsection("Imported modules", "pkg-content", contents)
+                )
 
             if builtin_modules:
                 contents = self.multicolumn(
-                    builtin_modules, lambda t: self.modulelink(t[1]))
-                result.append(self.bigsection(
-                    'Builtin modules', 'pkg-content', contents))
+                    builtin_modules, lambda t: self.modulelink(t[1])
+                )
+                result.append(
+                    self.bigsection("Builtin modules", "pkg-content", contents)
+                )
 
         if classes:
             classlist = [value for (key, value) in classes]
             contents = [
-                self.formattree(inspect.getclasstree(classlist, 1), name).rstrip()]
+                self.formattree(
+                    inspect.getclasstree(classlist, 1), name
+                ).rstrip()
+            ]
             for key, value in classes:
-                contents.append(self.document(value, key, name, fdict, cdict).rstrip())
-            result.append(self.bigsection(
-                'Classes defined here', 'index', '\n\n'.join(contents)))
+                contents.append(
+                    self.document(value, key, name, fdict, cdict).rstrip()
+                )
+            result.append(
+                self.bigsection(
+                    "Classes defined here", "index", "\n\n".join(contents)
+                )
+            )
         if funcs:
             contents = []
             for key, value in funcs:
-                contents.append(self.document(value, key, name, fdict, cdict).rstrip())
-            result.append(self.bigsection(
-                'Functions defined here', 'functions', '\n\n'.join(contents)))
+                contents.append(
+                    self.document(value, key, name, fdict, cdict).rstrip()
+                )
+            result.append(
+                self.bigsection(
+                    "Functions defined here", "functions", "\n\n".join(contents)
+                )
+            )
 
         if imported_funcs:
             ifc = []
             for src, functions in sorted(imported_funcs.items()):
                 fname = src.replace(".", "/") + ".py"
-                ifc.append("From " + \
-                    self.bold(self.filelink(src + ".md", src)) + " " + \
-                    self.filelink(fname)
+                ifc.append(
+                    "From "
+                    + self.bold(self.filelink(src + ".md", src))
+                    + " "
+                    + self.filelink(fname)
                 )
                 for fcn in sorted(functions):
                     ifc.append("* " + fcn)
@@ -519,23 +581,30 @@ class MarkdownDoc(Doc):
             if ifc:
                 ifc.pop()
 
-            result.append(self.bigsection(
-                'Imported functions', "functions", "\n".join(ifc)
-            ))
+            result.append(
+                self.bigsection(
+                    "Imported functions", "functions", "\n".join(ifc)
+                )
+            )
         if data:
             contents = []
             for key, value in data:
                 contents.append(self.document(value, key).rstrip())
-            result.append(self.bigsection(
-                'Data', 'data', '\n\n'.join(contents)))
+            result.append(
+                self.bigsection("Data", "data", "\n\n".join(contents))
+            )
 
-        if hasattr(object, '__author__'):
+        if hasattr(object, "__author__"):
             contents = self.markup(str(object.__author__), self.preformat)
-            result.append(self.bigsection('Author', 'author', contents).rstrip())
+            result.append(
+                self.bigsection("Author", "author", contents).rstrip()
+            )
 
-        if hasattr(object, '__credits__'):
+        if hasattr(object, "__credits__"):
             contents = self.markup(str(object.__credits__), self.preformat)
-            result.append(self.bigsection('Credits', 'credits', contents).rstrip())
+            result.append(
+                self.bigsection("Credits", "credits", contents).rstrip()
+            )
 
         return "\n\n".join(result)
 
@@ -552,55 +621,67 @@ class MarkdownDoc(Doc):
             return classname(c, m)
 
         if name == realname:
-            title = f'### class <a name="{realname}">' + self.escape(realname) + "</a>"
+            title = (
+                f'### class <a name="{realname}">'
+                + self.escape(realname)
+                + "</a>"
+            )
         else:
-            title = self.bold(name) + ' = class ' + realname
+            title = self.bold(name) + " = class " + realname
         if bases:
             parents = map(makename, bases)
-            title = title + '(%s)' % ', '.join(parents)
+            title = title + "(%s)" % ", ".join(parents)
 
         contents = []
         push = contents.append
 
         argspec = _getargspec(object)
-        if argspec and argspec != '()':
-            push(name + argspec + '\n')
+        if argspec and argspec != "()":
+            push(name + argspec + "\n")
 
         doc = getdoc(object)
         if doc:
-            push(doc + '\n')
+            push(doc + "\n")
 
         # List the mro, if non-trivial.
         mro = deque(inspect.getmro(object))
         if len(mro) > 2:
             push("Method resolution order:")
             for base in mro:
-                push('    ' + makename(base))
-            push('')
+                push("    " + makename(base))
+            push("")
 
         # List the built-in subclasses, if any:
         subclasses = sorted(
-            (str(cls.__name__) for cls in type.__subclasses__(object)
-             if (not cls.__name__.startswith("_") and
-                 getattr(cls, '__module__', '') == "builtins")),
-            key=str.lower
+            (
+                str(cls.__name__)
+                for cls in type.__subclasses__(object)
+                if (
+                    not cls.__name__.startswith("_")
+                    and getattr(cls, "__module__", "") == "builtins"
+                )
+            ),
+            key=str.lower,
         )
         no_of_subclasses = len(subclasses)
         MAX_SUBCLASSES_TO_DISPLAY = 4
         if subclasses:
             push("Built-in subclasses:")
             for subclassname in subclasses[:MAX_SUBCLASSES_TO_DISPLAY]:
-                push('    ' + subclassname)
+                push("    " + subclassname)
             if no_of_subclasses > MAX_SUBCLASSES_TO_DISPLAY:
-                push('    ... and ' +
-                     str(no_of_subclasses - MAX_SUBCLASSES_TO_DISPLAY) +
-                     ' other subclasses')
-            push('')
+                push(
+                    "    ... and "
+                    + str(no_of_subclasses - MAX_SUBCLASSES_TO_DISPLAY)
+                    + " other subclasses"
+                )
+            push("")
 
         # Cute little class to pump out a horizontal rule between sections.
         class HorizontalRule:
             def __init__(self):
                 self.needone = bool(doc)
+
             def maybe(sel):
                 if sel.needone:
                     push(self.hr())
@@ -621,8 +702,7 @@ class MarkdownDoc(Doc):
                         # (bug #1785)
                         push(self.docdata(value, name, mod))
                     else:
-                        push(self.document(value,
-                                        name, mod, object, homecls))
+                        push(self.document(value, name, mod, object, homecls))
                 push("")
             return attrs
 
@@ -647,13 +727,19 @@ class MarkdownDoc(Doc):
                         obj = getattr(object, name)
                     except AttributeError:
                         obj = homecls.__dict__[name]
-                    push(self.indent(self.docother(obj, name, mod, maxlen=70, doc=doc)))
+                    push(
+                        self.indent(
+                            self.docother(obj, name, mod, maxlen=70, doc=doc)
+                        )
+                    )
                 push("")
             return attrs
 
-        attrs = [(name, kind, cls, value)
-                 for name, kind, cls, value in classify_class_attrs(object)
-                 if visiblename(name, obj=object)]
+        attrs = [
+            (name, kind, cls, value)
+            for name, kind, cls, value in classify_class_attrs(object)
+            if visiblename(name, obj=object)
+        ]
 
         while attrs:
             if mro:
@@ -668,109 +754,146 @@ class MarkdownDoc(Doc):
             elif thisclass is object:
                 tag = "defined here"
             else:
-                tag = "inherited from %s" % classname(thisclass,
-                                                      object.__module__)
+                tag = "inherited from %s" % classname(
+                    thisclass, object.__module__
+                )
 
             sort_attributes(attrs, object)
 
             # Pump out the attrs, segregated by kind.
-            attrs = spill("Methods %s:\n" % tag, attrs,
-                          lambda t: t[1] == 'method')
-            attrs = spill("Class methods %s:\n" % tag, attrs,
-                          lambda t: t[1] == 'class method')
-            attrs = spill("Static methods %s:\n" % tag, attrs,
-                          lambda t: t[1] == 'static method')
-            attrs = spilldescriptors("Readonly properties %s:\n" % tag, attrs,
-                                     lambda t: t[1] == 'readonly property')
-            attrs = spilldescriptors("Data descriptors %s:\n" % tag, attrs,
-                                     lambda t: t[1] == 'data descriptor')
-            attrs = spilldata("Data and other attributes %s:\n" % tag, attrs,
-                              lambda t: t[1] == 'data')
+            attrs = spill(
+                "Methods %s:\n" % tag, attrs, lambda t: t[1] == "method"
+            )
+            attrs = spill(
+                "Class methods %s:\n" % tag,
+                attrs,
+                lambda t: t[1] == "class method",
+            )
+            attrs = spill(
+                "Static methods %s:\n" % tag,
+                attrs,
+                lambda t: t[1] == "static method",
+            )
+            attrs = spilldescriptors(
+                "Readonly properties %s:\n" % tag,
+                attrs,
+                lambda t: t[1] == "readonly property",
+            )
+            attrs = spilldescriptors(
+                "Data descriptors %s:\n" % tag,
+                attrs,
+                lambda t: t[1] == "data descriptor",
+            )
+            attrs = spilldata(
+                "Data and other attributes %s:\n" % tag,
+                attrs,
+                lambda t: t[1] == "data",
+            )
 
             assert attrs == []
             attrs = inherited
 
-        contents = '\n'.join(contents)
+        contents = "\n".join(contents)
         if not contents:
             return title
 
-        return title + '\n\n' + contents.rstrip()
+        return title + "\n\n" + contents.rstrip()
 
     def formatvalue(self, object):
         """Format an argument default value as text."""
-        return '=' + self.repr(object)
+        return "=" + self.repr(object)
 
-
-    def docroutine(self, object, name=None, mod=None,
-                   funcs={}, classes={}, methods={}, cl=None, homecls=None):
+    def docroutine(
+        self,
+        object,
+        name=None,
+        mod=None,
+        funcs={},
+        classes={},
+        methods={},
+        cl=None,
+        homecls=None,
+    ):
         """Produce Markdown documentation for a function or method object."""
         realname = object.__name__
         name = name or realname
         if homecls is None:
             homecls = cl
-        anchor = ('' if cl is None else cl.__name__) + '-' + name
-        note = ''
+        anchor = ("" if cl is None else cl.__name__) + "-" + name
+        note = ""
         skipdocs = False
         imfunc = None
         if _is_bound_method(object):
             imself = object.__self__
             if imself is cl:
-                imfunc = getattr(object, '__func__', None)
+                imfunc = getattr(object, "__func__", None)
             elif inspect.isclass(imself):
-                note = ' class method of %s' % self.classlink(imself, mod)
+                note = " class method of %s" % self.classlink(imself, mod)
             else:
-                note = ' method of %s instance' % self.classlink(
-                    imself.__class__, mod)
-        elif (inspect.ismethoddescriptor(object) or
-              inspect.ismethodwrapper(object)):
+                note = " method of %s instance" % self.classlink(
+                    imself.__class__, mod
+                )
+        elif inspect.ismethoddescriptor(object) or inspect.ismethodwrapper(
+            object
+        ):
             try:
                 objclass = object.__objclass__
             except AttributeError:
                 pass
             else:
                 if cl is None:
-                    note = ' unbound %s method' % self.classlink(objclass, mod)
+                    note = " unbound %s method" % self.classlink(objclass, mod)
                 elif objclass is not homecls:
-                    note = ' from ' + self.classlink(objclass, mod)
+                    note = " from " + self.classlink(objclass, mod)
         else:
             imfunc = object
-        if inspect.isfunction(imfunc) and homecls is not None and (
-            imfunc.__module__ != homecls.__module__ or
-            imfunc.__qualname__ != homecls.__qualname__ + '.' + realname):
+        if (
+            inspect.isfunction(imfunc)
+            and homecls is not None
+            and (
+                imfunc.__module__ != homecls.__module__
+                or imfunc.__qualname__ != homecls.__qualname__ + "." + realname
+            )
+        ):
             pname = self.parentlink(imfunc, mod)
             if pname:
-                note = ' from %s' % pname
+                note = " from %s" % pname
 
-        if (inspect.iscoroutinefunction(object) or
-                inspect.isasyncgenfunction(object)):
-            asyncqualifier = 'async '
+        if inspect.iscoroutinefunction(object) or inspect.isasyncgenfunction(
+            object
+        ):
+            asyncqualifier = "async "
         else:
-            asyncqualifier = ''
+            asyncqualifier = ""
 
         if name == realname:
             title = '<a name="%s">%s</a>' % (anchor, realname)
         else:
-            if (cl is not None and
-                inspect.getattr_static(cl, realname, []) is object):
-                reallink = self.file_link("#" + cl.__name__ + '-' + realname, realname)
+            if (
+                cl is not None
+                and inspect.getattr_static(cl, realname, []) is object
+            ):
+                reallink = self.file_link(
+                    "#" + cl.__name__ + "-" + realname, realname
+                )
                 skipdocs = True
-                if note.startswith(' from '):
-                    note = ''
+                if note.startswith(" from "):
+                    note = ""
             else:
                 reallink = realname
             title = '<a name="%s">%s</a> = %s' % (anchor, name, reallink)
         argspec = None
         if inspect.isroutine(object):
             argspec = _getargspec(object)
-            if argspec and realname == '<lambda>':
-                title = '*%s* *lambda* ' % name.replace("*", "\\*")
+            if argspec and realname == "<lambda>":
+                title = "*%s* *lambda* " % name.replace("*", "\\*")
                 # XXX lambda's won't usually have func_annotations['return']
                 # since the syntax doesn't support but it is possible.
                 # So removing parentheses isn't truly safe.
                 if not object.__annotations__:
-                    argspec = argspec[1:-1] # remove parentheses
+                    argspec = argspec[1:-1]  # remove parentheses
         if not argspec:
-            argspec = '(...)'
+            argspec = "(...)"
 
         decl = asyncqualifier + title + self.escape(argspec) + (note or "")
 
@@ -778,7 +901,8 @@ class MarkdownDoc(Doc):
             return decl
 
         doc = self.markup(
-            getdoc(object), self.preformat, funcs, classes, methods)
+            getdoc(object), self.preformat, funcs, classes, methods
+        )
         return self.section(decl, doc)
 
     def grey(self, text):
@@ -791,52 +915,66 @@ class MarkdownDoc(Doc):
 
         if name:
             push(name)
-            push('\n')
-        doc = getdoc(object) or ''
+            push("\n")
+        doc = getdoc(object) or ""
         if doc:
             push(self.indent(doc))
-        return ''.join(results)
+        return "".join(results)
 
     docproperty = docdata
 
-    def docother(self, object, name=None, mod=None, parent=None, *ignored,
-                 maxlen=None, doc=None):
+    def docother(
+        self,
+        object,
+        name=None,
+        mod=None,
+        parent=None,
+        *ignored,
+        maxlen=None,
+        doc=None,
+    ):
         """Produce Markdown documentation for a data object."""
         repr = self.repr(object)
         if maxlen:
-            line = (name and name + ' = ' or '') + repr
+            line = (name and name + " = " or "") + repr
             chop = maxlen - len(line)
-            if chop < 0: repr = repr[:chop] + '...'
-        line = (name and name + ' = ' or '') + repr
+            if chop < 0:
+                repr = repr[:chop] + "..."
+        line = (name and name + " = " or "") + repr
         if not doc:
             doc = getdoc(object)
         if doc:
-            line += '\n\n' + self.indent(str(doc))
+            line += "\n\n" + self.indent(str(doc))
         return line
 
     def page(self, title, body):
         """Produce a Markdown page"""
         return self._heading(title).rstrip() + "\n\n" + body.rstrip() + "\n"
 
+
 md = MarkdownDoc()
+
 
 def writedoc(thing, forceload=0):
     """Write Markdown documentation to a file in the current directory."""
-    old = set(sys.modules)
     object, name = resolve(thing, forceload)
     page = md.page(describe(object), md.document(object, name))
-    with open(name + '.md', 'w', encoding='utf-8') as file:
+    with open(name + ".md", "w", encoding="utf-8") as file:
         file.write(page)
 
-def writedocs(dir, pkgpath='', done=None):
+
+def writedocs(dir, pkgpath="", done=None):
     """Write out Markdown documentation for all modules in a directory tree."""
-    if done is None: done = {}
+    if done is None:
+        done = {}
     for importer, modname, ispkg in pkgutil.walk_packages([dir], pkgpath):
         writedoc(modname)
     return
 
+
 _tf = None
 _tc = None
+
 
 def spewtar(filename: str):
     """
@@ -864,23 +1002,38 @@ def finishtar():
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tar", default=False, action="store_true",
-        help="When provided, add all newly generated dotted.module.md to stdout tar."
+    parser.add_argument(
+        "--tar",
+        default=False,
+        action="store_true",
+        help="When provided, add all newly generated dotted.module.md to stdout tar.",
     )
-    parser.add_argument("--no-module-parent", default=False, action="store_true",
-        help="If provided, do not include a link to the module's parent."
+    parser.add_argument(
+        "--no-module-parent",
+        default=False,
+        action="store_true",
+        help="If provided, do not include a link to the module's parent.",
     )
-    parser.add_argument("--skip-object", default=False, action="store_true",
-        help="If provided, will skip listing builtins.object as a parent class."
+    parser.add_argument(
+        "--skip-object",
+        default=False,
+        action="store_true",
+        help="If provided, will skip listing builtins.object as a parent class.",
     )
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--stdin", default=False, action="store_true",
-        help="If provided, will read stdin as though it was an uncompressed tar file of .py files to run pydoc_md on. Implies --tar .")
-    group.add_argument("path", nargs="*",
+    group.add_argument(
+        "--stdin",
+        default=False,
+        action="store_true",
+        help="If provided, will read stdin as though it was an uncompressed tar file of .py files to run pydoc_md on. Implies --tar .",
+    )
+    group.add_argument(
+        "path",
+        nargs="*",
         help="Any dotted.module name will be imported and processed into a dotted.module.md . "
-                "File paths ending with '.py', [./]*dotted/module.py -> dotted.module, and processed into dotted.module.md . "
-                "File paths ending with '.md' will be added to stdout as part of a tar file. "
-                "WARNING: md.py files should use the 'path' format including the .py for proper processing."
+        "File paths ending with '.py', [./]*dotted/module.py -> dotted.module, and processed into dotted.module.md . "
+        "File paths ending with '.md' will be added to stdout as part of a tar file. "
+        "WARNING: md.py files should use the 'path' format including the .py for proper processing.",
     )
     return parser.parse_args(args)
 
@@ -899,7 +1052,7 @@ def main(parsed=None):
     if args.stdin:
         args.tar = True
         # read tar input
-        path =  tempfile.TemporaryDirectory()
+        path = tempfile.TemporaryDirectory()
         sys.path.insert(0, path.name)
         a = io.BytesIO()
         a.write(sys.stdin.read().encode())
@@ -910,11 +1063,10 @@ def main(parsed=None):
             for f in fn:
                 if f.endswith(".py"):
                     dest = os.path.join(dp, f)
-                    args.path.append(dest[len(path.name):].lstrip("/"))
+                    args.path.append(dest[len(path.name) :].lstrip("/"))
 
         args.path.sort()
         args.path.reverse()
-
 
     for arg in args.path:
         # spew markdown files as tar
@@ -934,5 +1086,6 @@ def main(parsed=None):
 
     finishtar()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

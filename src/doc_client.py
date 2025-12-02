@@ -55,6 +55,7 @@ class settings:
     to the `CARRIER_TO_CONFIG` mapping.
 
     """
+
     # Keep the known sandbox key for the warning message in the command line
     # interface. used when scac == "SANDBOX"
     KNOWN_SANDBOX_KEY = "qNAJFePYEfzZag1pDqv"
@@ -68,6 +69,7 @@ class settings:
         "LN": "LIMINAL_NETWORK_FINAL_MILE_API_KEY",
         "": "LIMINAL_NETWORK_API_KEY",
     }
+
 
 # override settings in shared resources
 shared.settings = settings

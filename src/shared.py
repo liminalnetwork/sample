@@ -67,7 +67,7 @@ def get_schema(name: str = "list") -> Union[tuple, list]:
 
     if name.partition(".")[0].isdigit():
         raise ValueError(
-            f"cannot verify API existence with numeric carrier_id, please use the SCAC instead"
+            "cannot verify API existence with numeric carrier_id, please use the SCAC instead"
         )
 
     with urllib.request.urlopen(url + name) as resp:

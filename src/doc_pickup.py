@@ -5,7 +5,12 @@ import json
 import urllib.request
 import urllib.parse
 
-from .shared import get_schema, supported_pretty as supported, get_api_key, pickup_url
+from .shared import (
+    get_schema,
+    supported_pretty as supported,
+    get_api_key,
+    pickup_url,
+)
 
 __doc__ = """
 There are 3 functions defined here:

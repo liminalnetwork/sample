@@ -6,7 +6,7 @@ import os
 from typing import Union
 import urllib.request
 
-from .shared import url
+from .shared import url, get_api_key
 
 __doc__ = """
 This module defines functions for Liminal Network's Visibility API package:
