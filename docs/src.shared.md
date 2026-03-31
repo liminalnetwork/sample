@@ -92,8 +92,14 @@ ebol_url = 'https://api.liminalnetwork.com/{scac}/ebol_21'
 
 pickup_url = 'https://api.liminalnetwork.com/{scac}/pickup'
 
+rating_schema_url = 'https://account.liminalnetwork.com/rating.schema/'
+
+rating_url = 'https://api.liminalnetwork.com/{scac}/rating'
+
 schema_url = 'https://api.liminalnetwork.com/schema?name='
 
 supported_url = 'https://api.liminalnetwork.com/supported?'
+
+tender_url = 'https://api.liminalnetwork.com/{scac}/tender'
 
 url = 'https://api.liminalnetwork.com/{scac}/{method}?auth={api_key}&pro={pro}'

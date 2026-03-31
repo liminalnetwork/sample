@@ -13,6 +13,7 @@ Names available in this module are imported from:
     doc_webhook_handler
     doc_ebol
     doc_pickup
+    doc_tender
 
 
 If you would like to use this library directly, rather than rewriting or
@@ -100,6 +101,8 @@ from .doc_webhook_handler import (
 
 from .doc_ebol import ebol_CU, ebol_get, ebol_delete
 from .doc_pickup import pickup_CU, pickup_get, pickup_delete
+from .doc_tender import tender
+from .doc_rating import rating
 
 
 def main():

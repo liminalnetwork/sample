@@ -15,6 +15,9 @@ implementation.
 url = "https://api.liminalnetwork.com/{scac}/{method}?auth={api_key}&pro={pro}"
 ebol_url = "https://api.liminalnetwork.com/{scac}/ebol_21"
 pickup_url = "https://api.liminalnetwork.com/{scac}/pickup"
+tender_url = "https://api.liminalnetwork.com/{scac}/tender"
+rating_url = "https://api.liminalnetwork.com/{scac}/rating"
+rating_schema_url = "https://account.liminalnetwork.com/rating.schema/"
 supported_url = "https://api.liminalnetwork.com/supported?"
 schema_url = "https://api.liminalnetwork.com/schema?name="
 
@@ -61,6 +64,7 @@ def get_schema(name: str = "list") -> Union[tuple, list]:
         https://account.liminalnetwork.com/account/carriers-schemas
         Will return:
             (json_schema, last_modified)
+
     """
 
     url = schema_url
@@ -69,6 +73,11 @@ def get_schema(name: str = "list") -> Union[tuple, list]:
         raise ValueError(
             "cannot verify API existence with numeric carrier_id, please use the SCAC instead"
         )
+
+    if name.endswith(".rating.post"):
+        # rating uses a different type schema
+        name = name.partition(".")[0]
+        url = rating_schema_url
 
     with urllib.request.urlopen(url + name) as resp:
         rr = resp.read()
@@ -79,7 +88,7 @@ def get_schema(name: str = "list") -> Union[tuple, list]:
         if "errors" in rj:
             raise Exception(rj)
 
-        if "schemas" not in rj:
+        if "schemas" not in rj and "last-modified" in resp.headers:
             # pull last-modified information from the header
             lm = resp.headers["last-modified"]
             return rj, lm

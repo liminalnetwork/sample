@@ -32,7 +32,7 @@ Args:
     data - dict representing the request, whose contents follow the format
         defined by the relevant JSON schema ({scac}.ebol.{post or put})
     verify_schema - if True, will validate {data} against the schema
-        returned by get_schema(f'{scac}.ebol.{post for create, put for not create}')
+        returned by get_schema('{scac}.ebol.{post for create, put for not create}')
     params - additional query parameters, can include:
         ignore_unprocessed=1/t/y
         debug_upstream=1/t/y

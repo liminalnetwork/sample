@@ -187,6 +187,11 @@ Example:
     settings.LIMINAL_NETWORK_API_KEY = ...
     hook_id = register_hook(scac, url_or_email, "image", pro)
 
+## Imported functions
+
+From **[src.shared](src.shared.md)** [src/shared.py](../src/shared.py)
+* [get_api_key()](src.shared.md#-get_api_key)
+
 ## Data
 
 url = 'https://api.liminalnetwork.com/{scac}/{method}?auth={api_key}&pro={pro}'

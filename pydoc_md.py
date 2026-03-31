@@ -1039,6 +1039,8 @@ def parse_args(args=None):
 
 
 def main(parsed=None):
+    # some binary strings don't round trip through utf-8, and we found some!
+    sys.stdin.reconfigure(encoding="latin-1")
     global npml, skip_object
     if not parsed:
         parsed = parse_args()
@@ -1055,7 +1057,7 @@ def main(parsed=None):
         path = tempfile.TemporaryDirectory()
         sys.path.insert(0, path.name)
         a = io.BytesIO()
-        a.write(sys.stdin.read().encode())
+        a.write(sys.stdin.read().encode("latin-1"))
         a.seek(0)
         files = tarfile.open(mode="r", fileobj=a)
         files.extractall(path.name)

@@ -10,6 +10,7 @@ Names available in this module are imported from:
     doc_webhook_handler
     doc_ebol
     doc_pickup
+    doc_tender
 
 
 If you would like to use this library directly, rather than rewriting or
@@ -138,6 +139,12 @@ From **[src.doc_pickup](src.doc_pickup.md)** [src/doc_pickup.py](../src/doc_pick
 
 From **[src.doc_presigned](src.doc_presigned.md)** [src/doc_presigned.py](../src/doc_presigned.py)
 * [limited_use_key()](src.doc_presigned.md#-limited_use_key)
+
+From **[src.doc_rating](src.doc_rating.md)** [src/doc_rating.py](../src/doc_rating.py)
+* [rating()](src.doc_rating.md#-rating)
+
+From **[src.doc_tender](src.doc_tender.md)** [src/doc_tender.py](../src/doc_tender.py)
+* [tender()](src.doc_tender.md#-tender)
 
 From **[src.doc_visibility](src.doc_visibility.md)** [src/doc_visibility.py](../src/doc_visibility.py)
 * [cancel_hook()](src.doc_visibility.md#-cancel_hook)

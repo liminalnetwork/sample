@@ -51,7 +51,7 @@ def pickup_CU(
         data - dict representing the request, whose contents follow the format
             defined by the relevant JSON schema ({scac}.pickup.{post or put})
         verify_schema - if True, will validate <data> against the schema
-            returned by get_schema(f'{scac}.pickup.{post for create, put for not create}')
+            returned by get_schema('{scac}.pickup.{post for create, put for not create}')
         params - additional query parameters, can include:
             ignore_unprocessed=1/t/y
             debug_upstream=1/t/y
@@ -132,7 +132,7 @@ def pickup_CU(
 
     elif check_supported:
         supp = supported(scac, True)
-        schema = schema_override or f"{scac}.ebol.{method}"
+        schema = schema_override or f"{scac}.pickup.{method}"
         if schema.lower() not in supp:
             raise ValueError(f"{schema} not supported")
 
